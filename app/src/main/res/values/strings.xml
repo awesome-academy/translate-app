@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Translator App</string>
+    <string name="activity_name">Translate App</string>
+    <string name="setting">Cài đặt</string>
+    <string name="test">Kiểm tra</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="history">Lịch sử</string>
+    <string name="hint_input">Nhập tại đây…</string>
+    <string name="hint_output">Từ đã dịch</string>
+    <string name="trans_but">Dịch</string>
+    <string name="auto_detect">Phát hiện ngôn ngữ</string>
+    <string name="all_lang_title">Tất cả ngôn ngữ</string>
+    <string name="lang">lang</string>
+</resources>
