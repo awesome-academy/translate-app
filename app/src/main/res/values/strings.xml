@@ -12,4 +12,7 @@
     <string name="auto_detect">Phát hiện ngôn ngữ</string>
     <string name="all_lang_title">Tất cả ngôn ngữ</string>
     <string name="lang">lang</string>
+    <string name="extract_sentence">Phân tích câu:</string>
+    <string name="translate_text">Các bản dịch của</string>
+    <string name="sample_word">Các từ tương tự:</string>
 </resources>

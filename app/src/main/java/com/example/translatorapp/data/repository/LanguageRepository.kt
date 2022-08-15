@@ -7,7 +7,7 @@ class LanguageRepository(
     private val languageDataSource: DataSource.LanguageDataSource
 ) : Repository.LanguageRepository {
 
-    override fun getLanguage(listener: OnResultListener<List<Language>>) {
+    override fun getLanguage(listener: OnResultListener<Map<String, Language>>) {
         languageDataSource.getLanguage(listener)
     }
 
@@ -15,7 +15,9 @@ class LanguageRepository(
         private var instance: LanguageRepository? = null
 
         fun getInstance(languageDataSource: DataSource.LanguageDataSource) = synchronized(this) {
-            instance ?: LanguageRepository(languageDataSource).also { instance = it }
+            instance ?: LanguageRepository(languageDataSource).also {
+                instance = it
+            }
         }
     }
 }
