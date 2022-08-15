@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:padding="@dimen/dp_20"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clickable="true">
 
     <TextView
         android:id="@+id/detect_lang"

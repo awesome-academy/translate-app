@@ -10,7 +10,7 @@ import com.example.translatorapp.databinding.ActivityMainBinding
 import com.example.translatorapp.screen.translate.TranslateFragment
 import com.example.translatorapp.util.addFragment
 
-private const val titleMainActivity = "Translate App"
+private const val TITLE_MAIN_ACTIVITY = "Translate App"
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,9 +44,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        val fragments = supportFragmentManager.fragments
+        val length = fragments.size - 1
+        for (index in length downTo 0) {
+            if (fragments[index].isVisible) {
+                val childFragManager = fragments[index].childFragmentManager
+                if (childFragManager.backStackEntryCount > 0) {
+                    childFragManager.popBackStack()
+                    return
+                }
+                break
+            }
+        }
         super.onBackPressed()
         enableView(false)
-        changeToolbar(titleMainActivity, R.drawable.ic_menu)
+        changeToolbar(TITLE_MAIN_ACTIVITY, R.drawable.ic_menu)
     }
 
     private fun addListener() {

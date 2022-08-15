@@ -19,11 +19,13 @@ private const val DICTIONARY = "dictionary"
 private const val SCRIPT = "scripts"
 private const val CODE = "code"
 private const val TO_SCRIPT = "toScripts"
+private const val KEEP_ALIVE_TIME: Long = 60
 
 class LanguageDataSource : DataSource.LanguageDataSource {
-    override fun getLanguage(listener: OnResultListener<List<Language>>) {
+
+    override fun getLanguage(listener: OnResultListener<Map<String, Language>>) {
         val threadPoolExecutor = ThreadPoolExecutor(
-            1, 1, 60, TimeUnit.SECONDS, LinkedBlockingQueue()
+            1, 1, KEEP_ALIVE_TIME, TimeUnit.SECONDS, LinkedBlockingQueue()
         )
         threadPoolExecutor.execute {
             val response = JSONObject(getJson(LANGUAGE_URL))
@@ -31,8 +33,9 @@ class LanguageDataSource : DataSource.LanguageDataSource {
             addLanguage(map, response.getJSONObject(TRANSLATION))
             addTransliteration(map, response.getJSONObject(TRANSLITERATION))
             addDictionary(map, response.getJSONObject(DICTIONARY))
-            listener.onSuccess(map.toList().map { it.second })
+            listener.onSuccess(map)
         }
+        threadPoolExecutor.shutdown()
     }
 
     private fun addLanguage(map: MutableMap<String, Language>, translation: JSONObject) {
@@ -45,8 +48,8 @@ class LanguageDataSource : DataSource.LanguageDataSource {
                     NATIVE_NAME
                 ),
                 isTransliterate = false,
-                transliterateScript = mutableMapOf(),
-                dictionaryScript = mutableMapOf(),
+                transliterateScript = null,
+                dictionaryScript = mutableListOf(),
                 isSupportDictionary = false
             )
             map[key] = language
@@ -73,11 +76,11 @@ class LanguageDataSource : DataSource.LanguageDataSource {
         for (key: String in dictionary.keys()) {
             if (map.containsKey(key)) {
                 map[key]?.supportDictionary(true)
-                map[key]?.addDictionary(
-                    key,
-                    dictionary.getJSONObject(key)
-                        .getJSONArray(TRANSLATIONS).getJSONObject(0).getString(CODE)
-                )
+                val trans = dictionary.getJSONObject(key).getJSONArray(TRANSLATIONS)
+                val length = trans.length() - 1
+                for (index in 0..length) {
+                    map[key]?.addDictionary(trans.getJSONObject(index).getString(CODE))
+                }
             }
         }
     }

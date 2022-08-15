@@ -5,20 +5,20 @@ data class Language(
     val name: String,
     val nativeName: String,
     var isTransliterate: Boolean,
-    val transliterateScript: MutableMap<String, String>,
-    val dictionaryScript: MutableMap<String, String>,
+    var transliterateScript: Pair<String, String>?,
+    val dictionaryScript: MutableList<String>,
     var isSupportDictionary: Boolean
 ) {
     fun addTransliterate(fromScript: String, toScript: String) {
-        transliterateScript[fromScript] = toScript
+        transliterateScript = fromScript to toScript
     }
 
     fun supportDictionary(isSupportDictionary: Boolean) {
         this.isSupportDictionary = isSupportDictionary
     }
 
-    fun addDictionary(fromScript: String, toScript: String) {
-        dictionaryScript[fromScript] = toScript
+    fun addDictionary(toCode: String) {
+        dictionaryScript.add(toCode)
     }
 
     fun getFullName() = "$name ($nativeName)"

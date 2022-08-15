@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.translatorapp.base.OnItemClickListener
 import com.example.translatorapp.data.model.Language
 import com.example.translatorapp.databinding.LanguageItemBinding
 
