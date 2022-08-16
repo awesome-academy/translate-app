@@ -6,8 +6,8 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="history">Lịch sử</string>
-    <string name="hint_input">Nhập tại đây…</string>
-    <string name="hint_output">Từ đã dịch</string>
+    <string name="input_hint">Nhập tại đây…</string>
+    <string name="output_hint">Từ đã dịch</string>
     <string name="trans_but">Dịch</string>
     <string name="auto_detect">Phát hiện ngôn ngữ</string>
     <string name="all_lang_title">Tất cả ngôn ngữ</string>
@@ -15,4 +15,12 @@
     <string name="extract_sentence">Phân tích câu:</string>
     <string name="translate_text">Các bản dịch của</string>
     <string name="sample_word">Các từ tương tự:</string>
+    <string name="title_app">Translate App</string>
+    <string name="title_example_fragment">Ví dụ</string>
+    <string name="title_language_source">Dịch từ</string>
+    <string name="title_language_target">Dịch sang</string>
+    <string name="msg_not_support">Ngôn ngữ không được hỗ trợ</string>
+    <string name="msg_copy">Đã sao chép</string>
+    <string name="text_source_suffix">%s:</string>
+    <string name="position">%d</string>
 </resources>

@@ -24,7 +24,7 @@ class LanguageAdapter : RecyclerView.Adapter<LanguageAdapter.ViewHolder>() {
 
     override fun getItemCount() = listLanguage.size
 
-    fun updateData(languages: MutableList<Language>) {
+    fun updateData(languages: List<Language>) {
         listLanguage.clear()
         listLanguage.addAll(languages)
         notifyDataSetChanged()
@@ -54,7 +54,7 @@ class LanguageAdapter : RecyclerView.Adapter<LanguageAdapter.ViewHolder>() {
         fun bindData(language: Language) {
             language.let {
                 data = language
-                viewBinding.name.text = it.getFullName()
+                viewBinding.textName.text = it.getFullName()
             }
         }
     }

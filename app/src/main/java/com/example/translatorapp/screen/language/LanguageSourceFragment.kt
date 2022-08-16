@@ -10,19 +10,18 @@ import com.example.translatorapp.databinding.FragmentLanguageBinding
 import com.example.translatorapp.screen.MainActivity
 import com.example.translatorapp.screen.language.adapter.LanguageAdapter
 
-private const val TITLE = "Dịch từ"
-
-class LanguageSourceFragment private constructor(
-    private val listLanguage: MutableList<Language>,
-    private val clearState: () -> Unit,
-    private val changeData: ((Language?, String?) -> Unit)
-) : BaseFragment<FragmentLanguageBinding>(FragmentLanguageBinding::inflate),
+class LanguageSourceFragment :
+    BaseFragment<FragmentLanguageBinding>(FragmentLanguageBinding::inflate),
     OnItemClickListener<Language> {
+
+    private var listLanguage: List<Language> = emptyList()
+    private var clearState: () -> Unit = {}
+    private var changeData: ((Language?, String?) -> Unit) = { _, _ -> }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         LanguageAdapter().apply {
-            bind.listLanguage.adapter = this
+            bind.recyclerListLanguage.adapter = this
             updateData(listLanguage)
             registerListener(this@LanguageSourceFragment)
         }
@@ -32,7 +31,7 @@ class LanguageSourceFragment private constructor(
     override fun changeToolbar() {
         (activity as MainActivity).let {
             it.enableView(true)
-            it.changeToolbar(TITLE, R.drawable.ic_back)
+            it.changeToolbar(getString(R.string.title_language_source), R.drawable.ic_back)
         }
     }
 
@@ -43,18 +42,22 @@ class LanguageSourceFragment private constructor(
     }
 
     private fun addListener() {
-        bind.detectLang.setOnClickListener {
+        bind.textDetectLang.setOnClickListener {
             activity?.onBackPressed()
-            changeData(null, bind.detectLang.text.toString())
+            changeData(null, bind.textDetectLang.text.toString())
         }
     }
 
     companion object {
         fun newInstance(
-            listLanguage: MutableList<Language>,
+            listLanguage: List<Language>,
             clearState: () -> Unit,
             changeData: (Language?, String?) -> Unit
         ) =
-            LanguageSourceFragment(listLanguage, clearState, changeData)
+            LanguageSourceFragment().apply {
+                this.listLanguage = listLanguage
+                this.clearState = clearState
+                this.changeData = changeData
+            }
     }
 }

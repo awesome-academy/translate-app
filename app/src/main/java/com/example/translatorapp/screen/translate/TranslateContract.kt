@@ -1,4 +1,4 @@
-package com.example.translatorapp.screen
+package com.example.translatorapp.screen.translate
 
 import com.example.translatorapp.data.model.Language
 

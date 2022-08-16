@@ -1,5 +1,7 @@
 package com.example.translatorapp.data.repository
 
+import com.example.translatorapp.data.model.BackTranslation
+import com.example.translatorapp.data.model.Example
 import com.example.translatorapp.data.model.Language
 
 interface Repository {
@@ -25,6 +27,16 @@ interface Repository {
             from: String,
             to: String,
             listener: OnResultListener<MutableList<List<Any>>>
+        )
+    }
+
+    interface ExampleRepository {
+
+        fun getExample(
+            backTranslation: BackTranslation,
+            from: String,
+            to: String,
+            listener: OnResultListener<List<Example>>
         )
     }
 }

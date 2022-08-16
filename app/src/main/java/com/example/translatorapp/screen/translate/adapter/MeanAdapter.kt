@@ -49,8 +49,8 @@ class MeanAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     ) : RecyclerView.ViewHolder(meanBind.root) {
 
         fun bindData(lookup: DictionaryLookup) {
-            meanBind.word.text = lookup.sourceWord.displayText
-            meanBind.means.text = lookup.targetWord.displayText
+            meanBind.textWord.text = lookup.sourceWord.displayText
+            meanBind.textMean.text = lookup.targetWord.displayText
         }
     }
 
@@ -59,7 +59,7 @@ class MeanAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     ) : RecyclerView.ViewHolder(typeBind.root) {
 
         fun bindData(text: String) {
-            typeBind.type.text = text
+            typeBind.textType.text = text
         }
     }
 }

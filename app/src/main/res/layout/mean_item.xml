@@ -6,7 +6,7 @@
     android:padding="@dimen/dp_10">
 
     <TextView
-        android:id="@+id/word"
+        android:id="@+id/text_word"
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -15,11 +15,11 @@
         android:singleLine="true"/>
 
     <TextView
-        android:id="@+id/means"
+        android:id="@+id/text_mean"
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_14"
-        android:layout_weight="1"
         android:singleLine="true"/>
 </LinearLayout>

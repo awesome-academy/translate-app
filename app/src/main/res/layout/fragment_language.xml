@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
+    android:clickable="true"
     android:padding="@dimen/dp_20"
-    android:orientation="vertical"
-    android:clickable="true">
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/detect_lang"
+        android:id="@+id/text_detect_lang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/auto_detect"
@@ -20,17 +20,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/all_lang_title"
         android:layout_marginTop="@dimen/dp_10"
-        android:textSize="@dimen/sp_16"
-        android:textColor="@color/color_text_blue"/>
+        android:text="@string/all_lang_title"
+        android:textColor="@color/color_text_blue"
+        android:textSize="@dimen/sp_16"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_language"
+        android:id="@+id/recycler_list_language"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_20"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/language_item"
-        tools:itemCount="20"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        tools:itemCount="20" />
 </LinearLayout>

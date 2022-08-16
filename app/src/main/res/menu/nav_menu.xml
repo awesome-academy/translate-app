@@ -5,18 +5,18 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/setting"
+            android:id="@+id/menu_setting"
             android:title="@string/setting"
             android:icon="@drawable/ic_settings"
             />
 
         <item
-            android:id="@+id/test"
+            android:id="@+id/menu_test"
             android:title="@string/test"
             android:icon="@drawable/ic_test"/>
 
         <item
-            android:id="@+id/history"
+            android:id="@+id/menu_history"
             android:title="@string/history"
             android:icon="@drawable/ic_history"/>
     </group>

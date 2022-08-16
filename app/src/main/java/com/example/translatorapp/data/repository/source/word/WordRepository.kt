@@ -1,6 +1,8 @@
-package com.example.translatorapp.data.repository
+package com.example.translatorapp.data.repository.source.word
 
 import com.example.translatorapp.data.model.Language
+import com.example.translatorapp.data.repository.OnResultListener
+import com.example.translatorapp.data.repository.Repository
 import com.example.translatorapp.data.repository.source.DataSource
 
 class WordRepository(
