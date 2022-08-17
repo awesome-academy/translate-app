@@ -1,6 +1,5 @@
 package com.example.translatorapp.data.repository.source.api
 
-import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
@@ -56,7 +55,6 @@ fun postJson(url: String, body: String): String {
         writer.write(body)
         writer.flush()
         writer.close()
-        Log.v("tag111", "$responseCode  $responseMessage")
         if (responseCode == HttpURLConnection.HTTP_OK) {
             return readResponse(this)
         }

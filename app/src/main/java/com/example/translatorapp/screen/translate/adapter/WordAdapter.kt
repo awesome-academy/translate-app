@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.translatorapp.R
 import com.example.translatorapp.base.OnItemClickListener
 import com.example.translatorapp.data.model.BackTranslation
 import com.example.translatorapp.databinding.SentenceItemBinding
@@ -56,12 +57,13 @@ class WordAdapter : RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 
         fun bindData(obj: Any, position: Int) {
             if (obj is String) {
-                viewBinding.showText.text = obj
-            } else {
-                data = (obj as BackTranslation)
-                viewBinding.showText.text = obj.sampleWord.displayText
+                viewBinding.textShowWord.text = obj
+            } else if (obj is BackTranslation) {
+                data = obj
+                viewBinding.textShowWord.text = obj.sampleWord.displayText
             }
-            viewBinding.showPosition.text = "${position + 1}"
+            viewBinding.textShowPosition.text =
+                viewBinding.root.context.getString(R.string.position, position + 1)
         }
     }
 }

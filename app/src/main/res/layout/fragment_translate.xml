@@ -10,7 +10,7 @@
         android:padding="@dimen/dp_15">
 
         <Button
-            android:id="@+id/btn_from"
+            android:id="@+id/button_from"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_corner_circle"
@@ -22,17 +22,17 @@
             app:layout_constraintVertical_chainStyle="spread" />
 
         <ImageView
-            android:id="@+id/arrow"
+            android:id="@+id/image_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_compare_arrows"
-            app:layout_constraintBottom_toBottomOf="@id/btn_from"
+            app:layout_constraintBottom_toBottomOf="@id/button_from"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_to"
+            android:id="@+id/button_to"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_corner_circle"
@@ -44,19 +44,19 @@
             app:layout_constraintWidth_percent="0.35"/>
 
         <EditText
-            android:id="@+id/input"
+            android:id="@+id/edit_input"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:layout_marginTop="@dimen/dp_20"
             android:background="@drawable/bg_border_blue"
-            android:hint="@string/hint_input"
+            android:hint="@string/input_hint"
             android:inputType="textMultiLine"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_from"
+            app:layout_constraintTop_toBottomOf="@id/button_from"
             app:layout_constraintDimensionRatio="H, 3:1"/>
 
         <ImageView
-            android:id="@+id/input_speaker"
+            android:id="@+id/image_input_speaker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
@@ -66,9 +66,10 @@
             android:src="@drawable/ic_speaker"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/input" />
+            app:layout_constraintTop_toTopOf="@id/edit_input" />
 
         <ImageView
+            android:id="@+id/image_copy_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
@@ -76,25 +77,25 @@
             android:padding="@dimen/dp_10"
             android:src="@drawable/ic_copy"
             android:visibility="invisible"
-            app:layout_constraintEnd_toStartOf="@id/input_speaker"
-            app:layout_constraintTop_toTopOf="@id/input" />
+            app:layout_constraintEnd_toStartOf="@id/image_input_speaker"
+            app:layout_constraintTop_toTopOf="@id/edit_input" />
 
         <EditText
-            android:id="@+id/output"
+            android:id="@+id/edit_output"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:layout_marginTop="@dimen/dp_20"
             android:background="@drawable/bg_border_blue"
             android:enabled="false"
-            android:hint="@string/hint_output"
+            android:hint="@string/output_hint"
             android:inputType="none"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input"
+            app:layout_constraintTop_toBottomOf="@id/edit_input"
             app:layout_constraintDimensionRatio="H, 3:1"/>
 
         <ImageView
-            android:id="@+id/output_speaker"
+            android:id="@+id/image_output_speaker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
@@ -104,10 +105,10 @@
             android:src="@drawable/ic_speaker"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/output" />
+            app:layout_constraintTop_toTopOf="@id/edit_output" />
 
         <ImageView
-            android:id="@+id/copy_output"
+            android:id="@+id/image_copy_output"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
@@ -115,11 +116,11 @@
             android:padding="@dimen/dp_10"
             android:src="@drawable/ic_copy"
             android:visibility="invisible"
-            app:layout_constraintEnd_toStartOf="@id/output_speaker"
-            app:layout_constraintTop_toTopOf="@id/output" />
+            app:layout_constraintEnd_toStartOf="@id/image_output_speaker"
+            app:layout_constraintTop_toTopOf="@id/edit_output" />
 
         <Button
-            android:id="@+id/translate"
+            android:id="@+id/button_translate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
@@ -128,15 +129,15 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/output" />
+            app:layout_constraintTop_toBottomOf="@id/edit_output"/>
 
         <FrameLayout
-            android:id="@+id/sup_layout_container"
+            android:id="@+id/frame_sup_layout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/output" />
+            app:layout_constraintTop_toBottomOf="@id/edit_output" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

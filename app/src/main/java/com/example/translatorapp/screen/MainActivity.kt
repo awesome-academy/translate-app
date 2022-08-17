@@ -10,8 +10,6 @@ import com.example.translatorapp.databinding.ActivityMainBinding
 import com.example.translatorapp.screen.translate.TranslateFragment
 import com.example.translatorapp.util.addFragment
 
-private const val TITLE_MAIN_ACTIVITY = "Translate App"
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bind: ActivityMainBinding
@@ -46,34 +44,41 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val fragments = supportFragmentManager.fragments
         val length = fragments.size - 1
+        var backFlag = true
+        var popFlag = true
         for (index in length downTo 0) {
-            if (fragments[index].isVisible) {
-                val childFragManager = fragments[index].childFragmentManager
-                if (childFragManager.backStackEntryCount > 0) {
+            val childFragManager = fragments[index].childFragmentManager
+            if (childFragManager.backStackEntryCount > 0) {
+                if (fragments[index].isVisible && popFlag) {
                     childFragManager.popBackStack()
                     return
                 }
-                break
+                backFlag = false
             }
+            popFlag = false
         }
         super.onBackPressed()
-        enableView(false)
-        changeToolbar(TITLE_MAIN_ACTIVITY, R.drawable.ic_menu)
+        if (backFlag) {
+            enableView(false)
+            changeToolbar(getString(R.string.title_app), R.drawable.ic_menu)
+        } else {
+            changeToolbar(getString(R.string.title_app), R.drawable.ic_back)
+        }
     }
 
     private fun addListener() {
         bind.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.setting -> Toast.makeText(this, "setting", Toast.LENGTH_SHORT).show()
-                R.id.test -> Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
-                R.id.history -> Toast.makeText(this, "history", Toast.LENGTH_SHORT).show()
+                R.id.menu_setting -> Toast.makeText(this, "setting", Toast.LENGTH_SHORT).show()
+                R.id.menu_test -> Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
+                R.id.menu_history -> Toast.makeText(this, "history", Toast.LENGTH_SHORT).show()
             }
             true
         }
     }
 
     fun changeToolbar(title: String, img: Int) {
-        bind.layoutMain.title.text = title
+        bind.layoutMain.textTitle.text = title
         bind.layoutMain.toolbar.setNavigationIcon(img)
     }
 
@@ -89,5 +94,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun findLayoutContainer() = bind.layoutMain.container.layoutContainer.id
+    fun findLayoutContainer() = bind.layoutMain.container.frameLayoutContainer.id
 }

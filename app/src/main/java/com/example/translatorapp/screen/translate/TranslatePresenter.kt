@@ -1,6 +1,5 @@
-package com.example.translatorapp.screen
+package com.example.translatorapp.screen.translate
 
-import android.util.Log
 import com.example.translatorapp.data.model.DictionaryLookup
 import com.example.translatorapp.data.model.Language
 import com.example.translatorapp.data.repository.OnResultListener
@@ -114,7 +113,7 @@ class TranslatePresenter(
     }
 
     private fun dictionaryLookup(text: String, from: String, to: String) {
-        if (from != "") {
+        if (from.isNotEmpty()) {
             wordRepository.dictionaryLookup(
                 text,
                 from,
@@ -136,7 +135,6 @@ class TranslatePresenter(
             if (value is DictionaryLookup) {
                 val mean = value.targetWord.displayText
                 if (language.isTransliterate) {
-                    Log.v("t111", "yes")
                     wordRepository.transliterate(
                         mean,
                         language,
@@ -154,6 +152,15 @@ class TranslatePresenter(
                 }
                 break
             }
+        }
+    }
+
+    fun getTranslate(text: String) {
+        if (text.contains(" ")) {
+            getTranslateSentence(text)
+            breakSentence(text)
+        } else {
+            getTranslateWord(text)
         }
     }
 

@@ -13,3 +13,5 @@ const val DETECT_URL =
     "https://microsoft-translator-text.p.rapidapi.com/Detect?api-version=$API_VERSION"
 const val LOOKUP_URL =
     "https://microsoft-translator-text.p.rapidapi.com/Dictionary/Lookup?api-version=$API_VERSION"
+const val EXAMPLE_URL =
+    "https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?api-version=$API_VERSION"
