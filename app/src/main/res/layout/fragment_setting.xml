@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:padding="@dimen/dp_10"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/text_pitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dp_5"
+        android:text="@string/title_pitch"
+        android:textSize="@dimen/sp_16"/>
+
+    <Spinner
+        android:id="@+id/spinner_pitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_pitch"
+        app:layout_constraintBottom_toBottomOf="@id/text_pitch"
+        android:spinnerMode="dialog"
+        android:entries="@array/spinner_item"
+        android:theme="@style/Theme.Background"/>
+
+    <View
+        android:id="@+id/view_bottom_pitch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        app:layout_constraintTop_toBottomOf="@id/text_pitch"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/dp_15"
+        android:background="@color/color_gray"/>
+
+    <TextView
+        android:id="@+id/text_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_bottom_pitch"
+        android:layout_marginTop="@dimen/dp_15"
+        android:text="@string/title_speed"
+        android:textSize="@dimen/sp_16"/>
+
+    <Spinner
+        android:id="@+id/spinner_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/text_speed"
+        app:layout_constraintBottom_toBottomOf="@id/text_speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:spinnerMode="dialog"
+        android:entries="@array/spinner_item"
+        android:theme="@style/Theme.Background"/>
+
+    <View
+        android:id="@+id/view_bottom_speed"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_speed"
+        android:layout_marginTop="@dimen/dp_15"
+        android:background="@color/color_gray"/>
+
+    <TextView
+        android:id="@+id/text_dark_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_bottom_speed"
+        android:layout_marginTop="@dimen/dp_15"
+        android:text="@string/title_dark_mode"
+        android:textSize="@dimen/sp_16"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_dark_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/text_dark_mode"
+        app:layout_constraintBottom_toBottomOf="@id/text_dark_mode"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/Theme.SwitchTheme"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

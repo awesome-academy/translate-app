@@ -39,13 +39,13 @@ class WordFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bind.recyclerWordMeans.apply {
+        binding.recyclerWordMeans.apply {
             val meanAdapter = MeanAdapter()
             meanAdapter.updatedData(list[0])
             adapter = meanAdapter
             isNestedScrollingEnabled = false
         }
-        bind.recyclerSampleWord.apply {
+        binding.recyclerSampleWord.apply {
             val wordAdapter = WordAdapter()
             wordAdapter.updateData(list[1])
             wordAdapter.registerListener(this@WordFragment)

@@ -7,10 +7,11 @@ fun addFragment(
     fragment: Fragment,
     addToBackStack: Boolean,
     container: Int,
-    manager: FragmentManager
+    manager: FragmentManager,
+    tag: String? = null
 ) {
     manager.beginTransaction().apply {
-        add(container, fragment)
+        add(container, fragment, tag)
         if (addToBackStack) {
             addToBackStack(null)
         }

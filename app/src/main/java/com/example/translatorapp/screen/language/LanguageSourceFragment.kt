@@ -21,7 +21,7 @@ class LanguageSourceFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         LanguageAdapter().apply {
-            bind.recyclerListLanguage.adapter = this
+            binding.recyclerListLanguage.adapter = this
             updateData(listLanguage)
             registerListener(this@LanguageSourceFragment)
         }
@@ -42,9 +42,9 @@ class LanguageSourceFragment :
     }
 
     private fun addListener() {
-        bind.textDetectLang.setOnClickListener {
+        binding.textDetectLang.setOnClickListener {
             activity?.onBackPressed()
-            changeData(null, bind.textDetectLang.text.toString())
+            changeData(null, binding.textDetectLang.text.toString())
         }
     }
 
