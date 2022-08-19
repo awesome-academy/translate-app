@@ -20,9 +20,9 @@ class LanguageTargetFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bind.textDetectLang.visibility = View.GONE
+        binding.textDetectLang.visibility = View.GONE
         LanguageAdapter().apply {
-            bind.recyclerListLanguage.adapter = this
+            binding.recyclerListLanguage.adapter = this
             updateData(listLanguage)
             registerListener(this@LanguageTargetFragment)
         }

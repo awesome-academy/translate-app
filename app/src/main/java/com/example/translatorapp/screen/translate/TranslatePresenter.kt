@@ -13,27 +13,29 @@ class TranslatePresenter(
     private var mView: TranslateContract.View? = null
     private val mapLanguage: MutableMap<String, Language> = mutableMapOf()
     val listLanguage: MutableList<Language> = mutableListOf()
-    var source: Language? = null
-    var target: Language? = null
+    var sourceLang: Language? = null
+    var targetLang: Language? = null
 
     override fun getLanguage() {
         languageRepository.getLanguage(object : OnResultListener<Map<String, Language>> {
             override fun onSuccess(data: Map<String, Language>) {
-                listLanguage.clear()
-                mapLanguage.clear()
-                mapLanguage.putAll(data)
-                listLanguage.addAll(data.toList().map { it.second })
-                listLanguage.sortBy { it.name }
-                mView?.onGetLanguageSuccess(listLanguage)
+                synchronized(this) {
+                    listLanguage.clear()
+                    mapLanguage.clear()
+                    mapLanguage.putAll(data)
+                    listLanguage.addAll(data.toList().map { it.second })
+                    listLanguage.sortBy { it.name }
+                    mView?.onGetLanguageSuccess(listLanguage)
+                }
             }
         })
     }
 
     override fun getTranslateSentence(text: String) {
-        target?.let {
+        targetLang?.let {
             wordRepository.translateSentence(
                 text,
-                source?.code,
+                sourceLang?.code,
                 it.code,
                 object : OnResultListener<String> {
                     override fun onSuccess(data: String) {
@@ -70,15 +72,15 @@ class TranslatePresenter(
     }
 
     override fun getTranslateWord(text: String) {
-        target?.let { target ->
-            source?.let {
+        targetLang?.let { target ->
+            sourceLang?.let {
                 if (checkDictionarySupport(it.code, target.code)) {
                     dictionaryLookup(text, it.code, target.code)
                 } else {
                     getTranslateSentence(text)
                 }
             }
-            if (source == null) {
+            if (sourceLang == null) {
                 getAutoDictionaryLookup(text, target)
             }
         }

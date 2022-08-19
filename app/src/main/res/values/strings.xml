@@ -19,8 +19,17 @@
     <string name="title_example_fragment">Ví dụ</string>
     <string name="title_language_source">Dịch từ</string>
     <string name="title_language_target">Dịch sang</string>
+    <string name="title_setting_fragment">Cài đặt</string>
     <string name="msg_not_support">Ngôn ngữ không được hỗ trợ</string>
     <string name="msg_copy">Đã sao chép</string>
     <string name="text_source_suffix">%s:</string>
     <string name="position">%d</string>
+    <string name="title_pitch">Độ cao</string>
+    <string name="title_speed">Tốc độ đọc</string>
+    <string name="title_dark_mode">Chế độ tối</string>
+    <string-array name="spinner_item">
+        <item>Thấp</item>
+        <item>Vừa</item>
+        <item>Cao</item>
+    </string-array>
 </resources>

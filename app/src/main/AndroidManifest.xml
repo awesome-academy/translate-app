@@ -6,12 +6,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <queries>
         <intent>
-            <action android:name="android.intent.action.TTS_SERVICE"/>
+            <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
 
     <application
         android:allowBackup="true"
+        android:name=".TranslatorApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/app_thum"
@@ -23,7 +24,8 @@
         <activity
             android:name=".screen.MainActivity"
             android:exported="true"
-            android:theme="@style/NoActionBar">
+            android:theme="@style/Theme.TranslatorApp"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

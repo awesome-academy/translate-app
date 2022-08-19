@@ -39,7 +39,7 @@ class ExampleFragment :
         super.onViewCreated(view, savedInstanceState)
         presenter.setView(this)
         backTranslation?.let {
-            bind.textSourceWord.text =
+            binding.textSourceWord.text =
                 getString(R.string.text_source_suffix, it.sampleWord.displayText)
             target?.let { target ->
                 source?.let { source ->
@@ -53,7 +53,7 @@ class ExampleFragment :
         activity?.runOnUiThread {
             val adapter = ExampleAdapter()
             adapter.updateData(listExample)
-            bind.recyclerListExample.adapter = adapter
+            binding.recyclerListExample.adapter = adapter
         }
     }
 

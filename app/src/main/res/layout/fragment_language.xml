@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:clickable="true"
     android:padding="@dimen/dp_20"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/text_detect_lang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/auto_detect"
-        android:textColor="@color/black"
         android:textSize="@dimen/sp_16"/>
 
     <TextView

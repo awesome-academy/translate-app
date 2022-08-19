@@ -10,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_border_blue">
+        android:background="@drawable/bg_border_blue"
+        android:padding="@dimen/dp_4">
 
         <TextView
             android:id="@+id/text_means_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/translate_text"
-            android:textColor="@color/black"
             android:textSize="@dimen/sp_14"
             android:padding="@dimen/dp_10"/>
 
@@ -35,13 +35,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_20"
         android:orientation="vertical"
-        android:background="@drawable/bg_border_blue">
+        android:background="@drawable/bg_border_blue"
+        android:padding="@dimen/dp_4">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp_14"
-            android:textColor="@color/black"
             android:text="@string/sample_word"
             android:padding="@dimen/dp_10" />
 

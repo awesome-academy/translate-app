@@ -13,47 +13,44 @@
             android:id="@+id/button_from"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_corner_circle"
-            android:singleLine="true"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.35"
-            app:layout_constraintVertical_chainStyle="spread" />
+            android:background="@drawable/bg_corner_circle"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/image_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_compare_arrows"
             app:layout_constraintBottom_toBottomOf="@id/button_from"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_compare_arrows" />
 
         <Button
             android:id="@+id/button_to"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_corner_circle"
-            android:padding="@dimen/dp_10"
-            android:singleLine="true"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.35"/>
+            app:layout_constraintWidth_percent="0.35"
+            android:background="@drawable/bg_corner_circle"
+            android:padding="@dimen/dp_10"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/edit_input"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:layout_marginTop="@dimen/dp_20"
-            android:background="@drawable/bg_border_blue"
-            android:hint="@string/input_hint"
-            android:inputType="textMultiLine"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_from"
-            app:layout_constraintDimensionRatio="H, 3:1"/>
+            app:layout_constraintDimensionRatio="H, 3:1"
+            android:background="@drawable/bg_border_blue"
+            android:hint="@string/input_hint"
+            android:inputType="textMultiLine"/>
 
         <ImageView
             android:id="@+id/image_input_speaker"
@@ -61,38 +58,36 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
             android:layout_marginEnd="@dimen/dp_4"
-            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/edit_input"
             android:padding="@dimen/dp_10"
             android:src="@drawable/ic_speaker"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/edit_input" />
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/image_copy_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
-            android:background="@color/white"
+            app:layout_constraintEnd_toStartOf="@id/image_input_speaker"
+            app:layout_constraintTop_toTopOf="@id/edit_input"
             android:padding="@dimen/dp_10"
             android:src="@drawable/ic_copy"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toStartOf="@id/image_input_speaker"
-            app:layout_constraintTop_toTopOf="@id/edit_input" />
+            android:visibility="invisible"/>
 
         <EditText
             android:id="@+id/edit_output"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:layout_marginTop="@dimen/dp_20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_input"
+            app:layout_constraintDimensionRatio="H, 3:1"
             android:background="@drawable/bg_border_blue"
             android:enabled="false"
             android:hint="@string/output_hint"
-            android:inputType="none"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_input"
-            app:layout_constraintDimensionRatio="H, 3:1"/>
+            android:textColor="?attr/colorOnSecondary"
+            android:inputType="none"/>
 
         <ImageView
             android:id="@+id/image_output_speaker"
@@ -100,36 +95,32 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
             android:layout_marginEnd="@dimen/dp_4"
-            android:background="@color/white"
-            android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_speaker"
-            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="@id/edit_output"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/edit_output" />
+            android:visibility="invisible"
+            android:padding="@dimen/dp_10"
+            android:src="@drawable/ic_speaker"/>
 
         <ImageView
             android:id="@+id/image_copy_output"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
-            android:background="@color/white"
-            android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_copy"
             android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@id/image_output_speaker"
-            app:layout_constraintTop_toTopOf="@id/edit_output" />
+            app:layout_constraintTop_toTopOf="@id/edit_output"
+            android:padding="@dimen/dp_10"
+            android:src="@drawable/ic_copy" />
 
         <Button
             android:id="@+id/button_translate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
-            android:backgroundTint="@color/color_blue_236"
-            android:text="@string/trans_but"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_output"/>
+            app:layout_constraintTop_toBottomOf="@id/edit_output"
+            android:text="@string/trans_but" />
 
         <FrameLayout
             android:id="@+id/frame_sup_layout_container"
