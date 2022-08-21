@@ -2,6 +2,7 @@ package com.example.translatorapp.data.repository.source
 
 import android.content.Context
 import com.example.translatorapp.data.model.BackTranslation
+import com.example.translatorapp.data.model.Exam
 import com.example.translatorapp.data.model.Example
 import com.example.translatorapp.data.model.History
 import com.example.translatorapp.data.model.Language
@@ -52,5 +53,10 @@ interface DataSource {
 
         fun getHistory(context: Context, listener: OnResultListener<List<History>>)
         fun writeHistory(context: Context, text: String, continueFlag: Boolean)
+    }
+
+    interface ExamDataSource {
+
+        fun getExam(context: Context, listener: OnResultListener<List<Exam>>)
     }
 }

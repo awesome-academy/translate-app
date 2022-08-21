@@ -13,7 +13,7 @@
     <string name="all_lang_title">Tất cả ngôn ngữ</string>
     <string name="lang">lang</string>
     <string name="extract_sentence">Phân tích câu:</string>
-    <string name="translate_text">Các bản dịch của</string>
+    <string name="translate_text">Các bản dịch của %s:</string>
     <string name="sample_word">Các từ tương tự:</string>
     <string name="title_app">Translate App</string>
     <string name="title_example_fragment">Ví dụ</string>
@@ -21,6 +21,7 @@
     <string name="title_language_target">Dịch sang</string>
     <string name="title_setting_fragment">Cài đặt</string>
     <string name="title_history_screen">Lịch sử</string>
+    <string name="title_test_fragment">Kiểm tra</string>
     <string name="msg_not_support">Ngôn ngữ không được hỗ trợ</string>
     <string name="msg_copy">Đã sao chép</string>
     <string name="text_source_suffix">%s:</string>
@@ -29,11 +30,17 @@
     <string name="title_speed">Tốc độ đọc</string>
     <string name="title_dark_mode">Chế độ tối</string>
     <string name="title_dialog_remove">Xóa lịch sử</string>
-    <string name="msg_dialog_remove">Bạn muốn xóa "%s" vĩnh viễn ?</string>
+    <string name="title_no_internet">Không có kết nối Internet</string>
+    <string name="msg_no_internet">Kiểm tra kết nối của bạn và thử lại.</string>
+    <string name="msg_dialog_remove">Bạn muốn xóa \"%s\" vĩnh viễn ?</string>
     <string name="msg_no_example">Không có ví dụ</string>
     <string name="confirm">OK</string>
     <string name="refuse">Hủy</string>
+    <string name="retry">Thử lại</string>
     <string name="title_search">search</string>
+    <string name="time">%ds</string>
+    <string name="your_score">Điểm số của bạn: %d/%d</string>
+    <string name="your_time">Thời gian: %d phút %d giây</string>
     <string-array name="spinner_item">
         <item>Thấp</item>
         <item>Vừa</item>

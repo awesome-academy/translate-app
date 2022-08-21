@@ -31,7 +31,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         restoreState()
-        binding.spinnerPitch.setSelection(1)
         addSpinnerListener(binding.spinnerPitch) { data ->
             pitch = data
             speak?.setPitch(data)
@@ -88,7 +87,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                // no implement
+                // No-op
             }
         }
     }

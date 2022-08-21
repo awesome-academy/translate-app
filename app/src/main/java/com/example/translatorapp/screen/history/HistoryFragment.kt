@@ -74,10 +74,10 @@ class HistoryFragment :
                     presenter.listHistory.remove(data)
                     presenter.writeHistory(
                         context,
-                        presenter.listHistory.map {
+                        presenter.listHistory.joinToString(separator = "\n") {
                             "${it.sourceCode}\t${it.targetCode}\t" +
                                 "${it.sourceWord}\t${it.meanWord}"
-                        }.joinToString { "$it\n" },
+                        },
                         false
                     )
                     adapter.removeData(data)
@@ -106,7 +106,7 @@ class HistoryFragment :
 
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(p0: String?): Boolean {
-                    // no implement
+                    // No-op
                     return false
                 }
 

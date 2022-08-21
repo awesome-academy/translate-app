@@ -1,16 +1,15 @@
 package com.example.translatorapp.util
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 
-fun addFragment(
+fun AppCompatActivity.addFragment(
     fragment: Fragment,
     addToBackStack: Boolean,
     container: Int,
-    manager: FragmentManager,
     tag: String? = null
 ) {
-    manager.beginTransaction().apply {
+    supportFragmentManager.beginTransaction().apply {
         add(container, fragment, tag)
         if (addToBackStack) {
             addToBackStack(null)

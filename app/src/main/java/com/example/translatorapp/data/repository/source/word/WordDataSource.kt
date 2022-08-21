@@ -51,10 +51,13 @@ class WordDataSource : DataSource.WordDataSource {
             1, 1, KEEP_ALIVE_TIME, TimeUnit.SECONDS, LinkedBlockingQueue()
         )
         threadPoolExecutor.execute {
-            val response = JSONArray(postJson(url, jArr.toString()))
-            val translations = response.getJSONObject(0).getJSONArray(TRANSLATIONS)
-            val translateText = translations.getJSONObject(0).getString(TEXT_TITLE)
-            listener.onSuccess(translateText)
+            val responseStr = postJson(url, jArr.toString())
+            if (responseStr.isNotEmpty()) {
+                val response = JSONArray(responseStr)
+                val translations = response.getJSONObject(0).getJSONArray(TRANSLATIONS)
+                val translateText = translations.getJSONObject(0).getString(TEXT_TITLE)
+                listener.onSuccess(translateText)
+            }
         }
         threadPoolExecutor.shutdown()
     }
@@ -85,17 +88,20 @@ class WordDataSource : DataSource.WordDataSource {
         )
         val jArr = JSONArray().put(JSONObject().put(TEXT_TITLE, text))
         threadPoolExecutor.execute {
-            val response = JSONArray(postJson(BREAK_URL, jArr.toString()))
-            val senLengths = response.getJSONObject(0).getJSONArray(SENT_LENGTH)
-            val length = senLengths.length() - 1
-            val list = mutableListOf<String>()
-            var index = 0
-            for (value: Int in 0..length) {
-                val indx = senLengths.getInt(value)
-                list.add(text.substring(index, index + indx))
-                index += indx
+            val responseStr = postJson(BREAK_URL, jArr.toString())
+            if (responseStr.isNotEmpty()) {
+                val response = JSONArray(postJson(BREAK_URL, jArr.toString()))
+                val senLengths = response.getJSONObject(0).getJSONArray(SENT_LENGTH)
+                val length = senLengths.length() - 1
+                val list = mutableListOf<String>()
+                var index = 0
+                for (value: Int in 0..length) {
+                    val indx = senLengths.getInt(value)
+                    list.add(text.substring(index, index + indx))
+                    index += indx
+                }
+                listener.onSuccess(list)
             }
-            listener.onSuccess(list)
         }
         threadPoolExecutor.shutdown()
     }
@@ -124,38 +130,41 @@ class WordDataSource : DataSource.WordDataSource {
             1, 1, KEEP_ALIVE_TIME, TimeUnit.SECONDS, LinkedBlockingQueue()
         )
         threadPoolExecutor.execute {
-            val response = JSONArray(postJson(url, jArr.toString())).getJSONObject(0)
-            val translations = response.getJSONArray(TRANSLATIONS)
-            val sourceWord = Word(
-                response.getString(NORMALIZED_SOURCE),
-                response.getString(
-                    DISPLAY_SOURCE
-                )
-            )
-            val length = translations.length() - 1
-            val listDicLookup = mutableListOf<DictionaryLookup>()
-            val listBackTranslation = mutableListOf<BackTranslation>()
-            for (index in 0..length) {
-                val tran = translations.getJSONObject(index)
-                val targetWord = Word(
-                    tran.getString(NORMALIZED_TARGET),
-                    tran.getString(
-                        DISPLAY_TARGET
+            val responseStr = postJson(url, jArr.toString())
+            if (responseStr.isNotEmpty()) {
+                val response = JSONArray(responseStr).getJSONObject(0)
+                val translations = response.getJSONArray(TRANSLATIONS)
+                val sourceWord = Word(
+                    response.getString(NORMALIZED_SOURCE),
+                    response.getString(
+                        DISPLAY_SOURCE
                     )
                 )
-                listDicLookup.add(DictionaryLookup(sourceWord, targetWord, tran.getString(POS_TAG)))
-                val backTranslation = tran.getJSONArray(BACK_TRANSLATIONS)
-                listBackTranslation.addAll(getBackTranslation(backTranslation, targetWord))
-            }
-            listDicLookup.sortBy { it.posTag }
-            val listMean = mutableListOf<Any>()
-            for (value in listDicLookup) {
-                if (value.posTag !in listMean) {
-                    listMean.add(value.posTag)
+                val length = translations.length() - 1
+                val listDicLookup = mutableListOf<DictionaryLookup>()
+                val listBackTranslation = mutableListOf<BackTranslation>()
+                for (index in 0..length) {
+                    val tran = translations.getJSONObject(index)
+                    val targetWord = Word(
+                        tran.getString(NORMALIZED_TARGET),
+                        tran.getString(
+                            DISPLAY_TARGET
+                        )
+                    )
+                    listDicLookup.add(DictionaryLookup(sourceWord, targetWord, tran.getString(POS_TAG)))
+                    val backTranslation = tran.getJSONArray(BACK_TRANSLATIONS)
+                    listBackTranslation.addAll(getBackTranslation(backTranslation, targetWord))
                 }
-                listMean.add(value)
+                listDicLookup.sortBy { it.posTag }
+                val listMean = mutableListOf<Any>()
+                for (value in listDicLookup) {
+                    if (value.posTag !in listMean) {
+                        listMean.add(value.posTag)
+                    }
+                    listMean.add(value)
+                }
+                listener.onSuccess(mutableListOf(listMean, listBackTranslation))
             }
-            listener.onSuccess(mutableListOf(listMean, listBackTranslation))
         }
         threadPoolExecutor.shutdown()
     }

@@ -1,13 +1,14 @@
 package com.example.translatorapp.screen.history
 
 import android.content.Context
+import com.example.translatorapp.base.BasePresenter
 import com.example.translatorapp.data.model.History
 import com.example.translatorapp.data.repository.OnResultListener
 import com.example.translatorapp.data.repository.Repository
 
 class HistoryPresenter(
     private val repository: Repository.HistoryRepository
-) : HistoryContract.Presenter {
+) : HistoryContract.Presenter, BasePresenter<HistoryContract.View> {
 
     private var view: HistoryContract.View? = null
     val listHistory = mutableListOf<History>()
@@ -29,7 +30,14 @@ class HistoryPresenter(
         repository.writeHistory(context, text, continueFlag)
     }
 
-    fun setView(view: HistoryContract.View) {
+    override fun onStart() {
+        // No-op
+    }
+
+    override fun onStop() {
+        // No-op
+    }
+    override fun setView(view: HistoryContract.View) {
         this.view = view
     }
 
