@@ -15,9 +15,12 @@ class Constant {
         const val KEY_SPEED = "speed"
         const val KEY_DARK_MODE = "darkMode"
         const val KEY_RECREATE = "recreate"
-        const val FILE_PATH = "translator"
         const val FILE_NAME = "history.txt"
         const val KEY_DATA_HISTORY = "data"
         const val KEY_HISTORY = "history"
+        const val KEY_QUESTION = "question"
+        const val KEY_ANSWER = "answer"
+        const val KEY_TIME = "time"
+        const val TIME_UNIT = 60
     }
 }

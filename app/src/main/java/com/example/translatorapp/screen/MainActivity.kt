@@ -1,7 +1,6 @@
 package com.example.translatorapp.screen
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -11,7 +10,9 @@ import com.example.translatorapp.constant.Constant
 import com.example.translatorapp.databinding.ActivityMainBinding
 import com.example.translatorapp.screen.history.HistoryFragment
 import com.example.translatorapp.screen.setting.SettingFragment
+import com.example.translatorapp.screen.test.TestFragment
 import com.example.translatorapp.screen.translate.TranslateFragment
+import com.example.translatorapp.util.NetworkUtils
 import com.example.translatorapp.util.addFragment
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +38,38 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.layoutMain.toolbar.setNavigationIcon(R.drawable.ic_menu)
-        addListener()
+
+        binding.navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.menu_setting -> {
+                    binding.drawerLayout.close()
+                    val translateFragment =
+                        supportFragmentManager.findFragmentByTag(Constant.TAG_TRANSLATE)
+                    if (translateFragment is TranslateFragment) {
+                        addFragment(
+                            fragment = SettingFragment.newInstance(translateFragment.speak),
+                            addToBackStack = true,
+                            container = findLayoutContainer()
+                        )
+                    }
+                }
+                R.id.menu_test -> {
+                    addFragment(
+                        fragment = TestFragment.newInstance(),
+                        addToBackStack = true,
+                        container = findLayoutContainer()
+                    )
+                }
+                R.id.menu_history -> {
+                    addFragment(
+                        fragment = HistoryFragment.newInstance(),
+                        addToBackStack = true,
+                        container = findLayoutContainer()
+                    )
+                }
+            }
+            true
+        }
     }
 
     override fun onBackPressed() {
@@ -48,11 +80,14 @@ class MainActivity : AppCompatActivity() {
         for (index in length downTo 0) {
             val childFragManager = fragments[index].childFragmentManager
             if (childFragManager.backStackEntryCount > 0) {
-                if (fragments[index].isVisible && popFlag) {
+                if (fragments[index].isVisible && popFlag && fragments[index] is TranslateFragment) {
                     childFragManager.popBackStack()
                     return
                 }
                 backFlag = false
+                if (fragments[index].isVisible && fragments[index] is TestFragment) {
+                    backFlag = true
+                }
             }
             popFlag = false
         }
@@ -70,44 +105,18 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun addListener() {
-        binding.navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.menu_setting -> {
-                    binding.drawerLayout.close()
-                    val translateFragment = supportFragmentManager.findFragmentByTag(Constant.TAG_TRANSLATE)
-                    if (translateFragment is TranslateFragment) {
-                        addFragment(
-                            fragment = SettingFragment.newInstance(translateFragment.speak),
-                            addToBackStack = true,
-                            container = findLayoutContainer(),
-                            manager = supportFragmentManager
-                        )
-                    }
-                }
-                R.id.menu_test -> Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
-                R.id.menu_history -> {
-                    addFragment(
-                        fragment = HistoryFragment.newInstance(),
-                        addToBackStack = true,
-                        container = findLayoutContainer(),
-                        manager = supportFragmentManager
-                    )
-                }
-            }
-            true
-        }
-    }
-
     private fun restoreState(instanceState: Bundle?) {
         if (instanceState == null) {
-            addFragment(
-                fragment = TranslateFragment.newInstance(),
-                addToBackStack = false,
-                container = findLayoutContainer(),
-                manager = supportFragmentManager,
-                tag = Constant.TAG_TRANSLATE
-            )
+            if (NetworkUtils.isNetworkAvailable(applicationContext)) {
+                addFragment(
+                    fragment = TranslateFragment.newInstance(),
+                    addToBackStack = false,
+                    container = findLayoutContainer(),
+                    tag = Constant.TAG_TRANSLATE
+                )
+            } else {
+                NetworkUtils.setDialogAction(applicationContext) { restoreState(instanceState) }
+            }
         }
     }
 

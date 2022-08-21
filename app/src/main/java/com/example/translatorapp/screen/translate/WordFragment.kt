@@ -13,12 +13,14 @@ import com.example.translatorapp.screen.MainActivity
 import com.example.translatorapp.screen.example.ExampleFragment
 import com.example.translatorapp.screen.translate.adapter.MeanAdapter
 import com.example.translatorapp.screen.translate.adapter.WordAdapter
-import com.example.translatorapp.util.addFragment
+import com.example.translatorapp.util.NetworkUtils
+import com.example.translatorapp.util.addFragmentToParent
 
 class WordFragment :
     BaseFragment<FragmentWordBinding>(FragmentWordBinding::inflate),
     OnItemClickListener<BackTranslation> {
 
+    private var sourceWord: String? = null
     private var list: List<List<Any>> = emptyList()
     private val myActivity by lazy { parentFragment?.activity as? MainActivity }
     private var clearState: () -> Unit = {}
@@ -37,6 +39,7 @@ class WordFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sourceWord?.let { binding.textMeansTitle.text = getString(R.string.translate_text, it) }
         binding.recyclerWordMeans.apply {
             val meanAdapter = MeanAdapter()
             meanAdapter.updatedData(list[0])
@@ -67,14 +70,16 @@ class WordFragment :
     }
 
     private fun addExampleFragment(data: BackTranslation) {
-        myActivity?.let { myActivity ->
-            parentFragment?.let {
-                addFragment(
+        activity?.applicationContext?.let {
+            if (NetworkUtils.isNetworkAvailable(it)) {
+                addFragmentToParent(
                     fragment = ExampleFragment.newInstance(data, sourceLang, targetLang),
                     addToBackStack = true,
-                    container = myActivity.findLayoutContainer(),
-                    manager = it.parentFragmentManager
+                    addToActivity = true,
+                    container = myActivity?.findLayoutContainer()
                 )
+            } else {
+                NetworkUtils.setDialogAction(it) { addExampleFragment(data) }
             }
         }
     }
@@ -83,10 +88,12 @@ class WordFragment :
         fun newInstance(
             sourceLang: Language?,
             targetLang: Language?,
+            sourceWord: String,
             list: List<List<Any>>,
             clearState: () -> Unit
         ) =
             WordFragment().apply {
+                this.sourceWord = sourceWord
                 this.list = list
                 this.clearState = clearState
                 this.sourceLang = sourceLang

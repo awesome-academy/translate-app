@@ -1,6 +1,7 @@
 package com.example.translatorapp.screen.translate
 
 import android.content.Context
+import com.example.translatorapp.base.BasePresenter
 import com.example.translatorapp.data.model.DictionaryLookup
 import com.example.translatorapp.data.model.Language
 import com.example.translatorapp.data.repository.OnResultListener
@@ -10,7 +11,7 @@ class TranslatePresenter(
     private val languageRepository: Repository.LanguageRepository,
     private val wordRepository: Repository.WordRepository,
     private val historyRepository: Repository.HistoryRepository
-) : TranslateContract.Presenter {
+) : TranslateContract.Presenter, BasePresenter<TranslateContract.View> {
 
     private var view: TranslateContract.View? = null
     private val dictionary by lazy { Dictionary() }
@@ -129,7 +130,15 @@ class TranslatePresenter(
         }
     }
 
-    fun setView(view: TranslateContract.View) {
+    override fun onStart() {
+        getLanguage()
+    }
+
+    override fun onStop() {
+        // No-op
+    }
+
+    override fun setView(view: TranslateContract.View) {
         this.view = view
     }
 

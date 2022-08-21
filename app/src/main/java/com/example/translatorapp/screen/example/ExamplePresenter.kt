@@ -1,5 +1,6 @@
 package com.example.translatorapp.screen.example
 
+import com.example.translatorapp.base.BasePresenter
 import com.example.translatorapp.data.model.BackTranslation
 import com.example.translatorapp.data.model.Example
 import com.example.translatorapp.data.model.Language
@@ -8,7 +9,7 @@ import com.example.translatorapp.data.repository.Repository
 
 class ExamplePresenter(
     private val exampleRepository: Repository.ExampleRepository
-) : ExampleContract.Presenter {
+) : ExampleContract.Presenter, BasePresenter<ExampleContract.View> {
 
     private var view: ExampleContract.View? = null
 
@@ -25,7 +26,15 @@ class ExamplePresenter(
         )
     }
 
-    fun setView(view: ExampleContract.View) {
+    override fun onStart() {
+        // No op
+    }
+
+    override fun onStop() {
+        // No op
+    }
+
+    override fun setView(view: ExampleContract.View) {
         this.view = view
     }
 

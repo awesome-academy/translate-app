@@ -25,7 +25,9 @@ import com.example.translatorapp.screen.MainActivity
 import com.example.translatorapp.screen.language.LanguageSourceFragment
 import com.example.translatorapp.screen.language.LanguageTargetFragment
 import com.example.translatorapp.screen.setting.SettingFragment
-import com.example.translatorapp.util.addFragment
+import com.example.translatorapp.util.NetworkUtils
+import com.example.translatorapp.util.addFragmentToChild
+import com.example.translatorapp.util.addFragmentToParent
 import java.util.Locale
 
 class TranslateFragment :
@@ -87,13 +89,22 @@ class TranslateFragment :
             }
             history?.apply {
                 binding.editInput.setText(sourceWord.trim())
-                presenter.getTranslate(sourceWord.trim())
+                binding.buttonTranslate.callOnClick()
             }
         }
 
         presenter.apply {
             setView(this@TranslateFragment)
-            getLanguage()
+            activity?.applicationContext?.let {
+                fun getLang() {
+                    if (NetworkUtils.isNetworkAvailable(it)) {
+                        presenter.onStart()
+                    } else {
+                        NetworkUtils.setDialogAction(it) { getLang() }
+                    }
+                }
+                getLang()
+            }
         }
     }
 
@@ -106,12 +117,6 @@ class TranslateFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(Constant.KEY_VISIBLE, binding.imageOutputSpeaker.isVisible)
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        speak.release()
         val sharedPreferences = activity?.getSharedPreferences(Constant.KEY_TRANSLATE, Context.MODE_PRIVATE)
         if (presenter.targetLang != null) {
             sharedPreferences?.edit()
@@ -119,6 +124,12 @@ class TranslateFragment :
                 ?.putString(Constant.KEY_LANGUAGE_FROM, presenter.sourceLang?.code)
                 ?.apply()
         }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speak.release()
     }
 
     override fun onGetLanguageSuccess(data: List<Language>) {
@@ -144,6 +155,7 @@ class TranslateFragment :
 
     override fun onTranslateSentenceComplete(data: String) {
         activity?.runOnUiThread {
+            binding.editInput.isEnabled = false
             binding.editOutput.setText(data)
             context?.let {
                 presenter.writeHistory(
@@ -163,17 +175,18 @@ class TranslateFragment :
                 stateView.clearState()
                 binding.buttonTranslate.visibility = View.VISIBLE
             }
-            addFragment(
+            addFragmentToChild(
                 fragment = fragment,
                 addToBackStack = true,
                 container = binding.frameSupLayoutContainer.id,
-                manager = childFragmentManager
+                customAnimation = false
             )
         }
     }
 
     override fun onDictionaryLookupComplete(data: List<List<Any>>) {
         activity?.runOnUiThread {
+            binding.editInput.isEnabled = false
             binding.buttonTranslate.visibility = View.GONE
             binding.editOutput.setText(data[2][0].toString())
             context?.let {
@@ -194,16 +207,17 @@ class TranslateFragment :
             val wordFragment = WordFragment.newInstance(
                 sourceLang = sourceLang,
                 targetLang = presenter.targetLang,
+                sourceWord = binding.editInput.text.toString(),
                 list = res
             ) {
                 stateView.clearState()
                 binding.buttonTranslate.visibility = View.VISIBLE
             }
-            addFragment(
+            addFragmentToChild(
                 fragment = wordFragment,
                 addToBackStack = true,
                 container = binding.frameSupLayoutContainer.id,
-                manager = childFragmentManager
+                customAnimation = false
             )
         }
     }
@@ -222,11 +236,10 @@ class TranslateFragment :
                     text?.let { binding.buttonFrom.text = it }
                 }
             myActivity?.let {
-                addFragment(
+                addFragmentToParent(
                     fragment = sourceFragment,
                     addToBackStack = true,
-                    container = it.findLayoutContainer(),
-                    manager = parentFragmentManager
+                    container = it.findLayoutContainer()
                 )
             }
         }
@@ -240,19 +253,26 @@ class TranslateFragment :
                 presenter.targetLang = data
             }
             myActivity?.let {
-                addFragment(
+                addFragmentToParent(
                     fragment = targetFragment,
                     addToBackStack = true,
-                    container = it.findLayoutContainer(),
-                    manager = parentFragmentManager
+                    container = it.findLayoutContainer()
                 )
             }
         }
 
         binding.buttonTranslate.setOnClickListener {
             if (binding.editInput.text.toString().trim().isNotEmpty()) {
-                presenter.getTranslate(binding.editInput.text.toString().trim())
-                stateView.enableImage(View.VISIBLE)
+                activity?.applicationContext?.let {
+                    if (NetworkUtils.isNetworkAvailable(it)) {
+                        presenter.getTranslate(binding.editInput.text.toString().trim())
+                        stateView.enableImage(View.VISIBLE)
+                    } else {
+                        NetworkUtils.setDialogAction(it) {
+                            binding.buttonTranslate.callOnClick()
+                        }
+                    }
+                }
             }
         }
 
@@ -341,6 +361,7 @@ class TranslateFragment :
 
         fun clearState() {
             enableImage(View.INVISIBLE)
+            binding.editInput.isEnabled = true
             if (childFragmentManager.backStackEntryCount > 0) {
                 childFragmentManager.popBackStack()
             }
