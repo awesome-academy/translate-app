@@ -1,5 +1,6 @@
 package com.example.translatorapp.screen.translate
 
+import android.content.Context
 import com.example.translatorapp.data.model.Language
 
 class TranslateContract {
@@ -16,5 +17,6 @@ class TranslateContract {
         fun getTranslateSentence(text: String)
         fun breakSentence(text: String)
         fun getTranslateWord(text: String)
+        fun writeHistory(context: Context, text: String, continueFlag: Boolean)
     }
 }

@@ -20,6 +20,7 @@
     <string name="title_language_source">Dịch từ</string>
     <string name="title_language_target">Dịch sang</string>
     <string name="title_setting_fragment">Cài đặt</string>
+    <string name="title_history_screen">Lịch sử</string>
     <string name="msg_not_support">Ngôn ngữ không được hỗ trợ</string>
     <string name="msg_copy">Đã sao chép</string>
     <string name="text_source_suffix">%s:</string>
@@ -27,6 +28,12 @@
     <string name="title_pitch">Độ cao</string>
     <string name="title_speed">Tốc độ đọc</string>
     <string name="title_dark_mode">Chế độ tối</string>
+    <string name="title_dialog_remove">Xóa lịch sử</string>
+    <string name="msg_dialog_remove">Bạn muốn xóa "%s" vĩnh viễn ?</string>
+    <string name="msg_no_example">Không có ví dụ</string>
+    <string name="confirm">OK</string>
+    <string name="refuse">Hủy</string>
+    <string name="title_search">search</string>
     <string-array name="spinner_item">
         <item>Thấp</item>
         <item>Vừa</item>

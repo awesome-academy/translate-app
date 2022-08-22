@@ -22,7 +22,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.NoBackground" parent="ThemeOverlay.AppCompat.DayNight"/>
+    <style name="Theme.NoBackground" parent="ThemeOverlay.AppCompat.DayNight" />
 
     <style name="Theme.Background" parent="Widget.AppCompat.PopupMenu">
         <item name="android:background">@android:color/transparent</item>
@@ -31,5 +31,22 @@
 
     <style name="Theme.SwitchTheme" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="colorControlActivated">@color/white</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="Theme.AppCompat.DayNight">
+        <item name="android:background">@color/color_light_black</item>
     </style>
 </resources>

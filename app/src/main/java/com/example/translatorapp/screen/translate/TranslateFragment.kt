@@ -6,12 +6,16 @@ import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
 import com.example.translatorapp.constant.Constant
+import com.example.translatorapp.data.model.History
 import com.example.translatorapp.data.model.Language
+import com.example.translatorapp.data.repository.source.history.HistoryDataSource
+import com.example.translatorapp.data.repository.source.history.HistoryRepository
 import com.example.translatorapp.data.repository.source.language.LanguageDataSource
 import com.example.translatorapp.data.repository.source.language.LanguageRepository
 import com.example.translatorapp.data.repository.source.word.WordDataSource
@@ -29,6 +33,7 @@ class TranslateFragment :
     TranslateContract.View {
 
     val speak by lazy { Speak() }
+    private val myActivity by lazy { activity as? MainActivity }
     private val stateView by lazy { StateView() }
     private val clipBroad by lazy { ClipBroad() }
     private val presenter by lazy {
@@ -38,12 +43,15 @@ class TranslateFragment :
             ),
             WordRepository.getInstance(
                 WordDataSource.getInstance()
+            ),
+            HistoryRepository.getInstance(
+                HistoryDataSource.getInstance()
             )
         )
     }
 
     override fun changeToolbar() {
-        (activity as MainActivity).let {
+        myActivity?.let {
             it.enableView(false)
             it.changeToolbar(getString(R.string.title_app), R.drawable.ic_menu)
         }
@@ -51,7 +59,8 @@ class TranslateFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPreferences = activity?.getSharedPreferences(Constant.KEY_SETTING, Context.MODE_PRIVATE)
+        val sharedPreferences =
+            activity?.getSharedPreferences(Constant.KEY_SETTING, Context.MODE_PRIVATE)
         sharedPreferences?.getFloat(Constant.KEY_PITCH, SettingFragment.NORMAL)?.let {
             speak.setPitch(it)
         }
@@ -59,6 +68,29 @@ class TranslateFragment :
             speak.setSpeed(it)
         }
         addListener()
+        parentFragmentManager.setFragmentResultListener(
+            Constant.KEY_HISTORY,
+            this
+        ) { _, result ->
+            val history = result.getParcelable<History>(Constant.KEY_DATA_HISTORY)
+
+            stateView.setLanguage(
+                history?.sourceCode?.trim(),
+                binding.buttonFrom,
+                getString(R.string.auto_detect)
+            ) {
+                presenter.sourceLang = it
+            }
+
+            stateView.setLanguage(history?.targetCode, binding.buttonTo) {
+                presenter.targetLang = it
+            }
+            history?.apply {
+                binding.editInput.setText(sourceWord.trim())
+                presenter.getTranslate(sourceWord.trim())
+            }
+        }
+
         presenter.apply {
             setView(this@TranslateFragment)
             getLanguage()
@@ -83,41 +115,44 @@ class TranslateFragment :
         val sharedPreferences = activity?.getSharedPreferences(Constant.KEY_TRANSLATE, Context.MODE_PRIVATE)
         if (presenter.targetLang != null) {
             sharedPreferences?.edit()
-                ?.putInt(Constant.KEY_POSITION_TO, presenter.listLanguage.indexOf(presenter.targetLang))
-                ?.putInt(Constant.KEY_POSITION_FROM, presenter.listLanguage.indexOf(presenter.sourceLang))
+                ?.putString(Constant.KEY_LANGUAGE_TO, presenter.targetLang?.code)
+                ?.putString(Constant.KEY_LANGUAGE_FROM, presenter.sourceLang?.code)
                 ?.apply()
         }
     }
 
     override fun onGetLanguageSuccess(data: List<Language>) {
         activity?.runOnUiThread {
-            var sourceLangIndex = 0
-            var targetLanguageIndex = 1
             val sharedPreferences =
                 activity?.getSharedPreferences(Constant.KEY_TRANSLATE, Context.MODE_PRIVATE)
-            sharedPreferences?.getInt(Constant.KEY_POSITION_FROM, -1)?.let {
-                sourceLangIndex = it
-            }
-            sharedPreferences?.getInt(Constant.KEY_POSITION_TO, -1)?.let {
-                if (it != -1) {
-                    targetLanguageIndex = it
+            sharedPreferences?.getString(Constant.KEY_LANGUAGE_FROM, null).let {
+                stateView.setLanguage(
+                    it,
+                    binding.buttonFrom,
+                    getString(R.string.auto_detect)
+                ) { language ->
+                    presenter.sourceLang = language
                 }
             }
-            if (sourceLangIndex == -1) {
-                binding.buttonFrom.text = getString(R.string.auto_detect)
-                presenter.sourceLang = null
-            } else {
-                presenter.sourceLang = data[sourceLangIndex]
-                binding.buttonFrom.text = data[sourceLangIndex].nativeName
+            sharedPreferences?.getString(Constant.KEY_LANGUAGE_TO, null).let {
+                stateView.setLanguage(it, binding.buttonTo) { language ->
+                    presenter.targetLang = language
+                }
             }
-            presenter.targetLang = data[targetLanguageIndex]
-            binding.buttonTo.text = data[targetLanguageIndex].nativeName
         }
     }
 
     override fun onTranslateSentenceComplete(data: String) {
         activity?.runOnUiThread {
             binding.editOutput.setText(data)
+            context?.let {
+                presenter.writeHistory(
+                    it,
+                    "${presenter.sourceLang?.code}\t${presenter.targetLang?.code}\t" +
+                        "${binding.editInput.text.trim()}\t${data.split("\n")[0]}\n",
+                    true
+                )
+            }
         }
     }
 
@@ -141,9 +176,23 @@ class TranslateFragment :
         activity?.runOnUiThread {
             binding.buttonTranslate.visibility = View.GONE
             binding.editOutput.setText(data[2][0].toString())
+            context?.let {
+                presenter.writeHistory(
+                    it,
+                    "${presenter.sourceLang?.code}\t${presenter.targetLang?.code}\t" +
+                        "${binding.editInput.text.trim()}\t${
+                        data[2][0].toString().split("\n")[0]
+                        }\n",
+                    true
+                )
+            }
             val res = listOf(data[0], data[1])
+            var sourceLang = presenter.sourceLang
+            if (sourceLang == null) {
+                sourceLang = presenter.sourceLangTemp
+            }
             val wordFragment = WordFragment.newInstance(
-                sourceLang = presenter.sourceLang,
+                sourceLang = sourceLang,
                 targetLang = presenter.targetLang,
                 list = res
             ) {
@@ -172,12 +221,14 @@ class TranslateFragment :
                     presenter.sourceLang = data
                     text?.let { binding.buttonFrom.text = it }
                 }
-            addFragment(
-                fragment = sourceFragment,
-                addToBackStack = true,
-                container = (activity as MainActivity).findLayoutContainer(),
-                manager = parentFragmentManager
-            )
+            myActivity?.let {
+                addFragment(
+                    fragment = sourceFragment,
+                    addToBackStack = true,
+                    container = it.findLayoutContainer(),
+                    manager = parentFragmentManager
+                )
+            }
         }
 
         binding.buttonTo.setOnClickListener {
@@ -188,12 +239,14 @@ class TranslateFragment :
                 binding.buttonTo.text = data.nativeName
                 presenter.targetLang = data
             }
-            addFragment(
-                fragment = targetFragment,
-                addToBackStack = true,
-                container = (activity as MainActivity).findLayoutContainer(),
-                manager = parentFragmentManager
-            )
+            myActivity?.let {
+                addFragment(
+                    fragment = targetFragment,
+                    addToBackStack = true,
+                    container = it.findLayoutContainer(),
+                    manager = parentFragmentManager
+                )
+            }
         }
 
         binding.buttonTranslate.setOnClickListener {
@@ -207,21 +260,7 @@ class TranslateFragment :
 
         binding.imageCopyInput.setOnClickListener { clipBroad.copyToClipboard(binding.editInput.text.toString()) }
 
-        binding.imageInputSpeaker.setOnClickListener {
-            presenter.sourceLang?.code?.let {
-                speak.speakOut(
-                    binding.editInput.text.toString(),
-                    Locale(it)
-                )
-            }
-        }
-
-        binding.imageOutputSpeaker.setOnClickListener {
-            presenter.targetLang?.code?.let {
-                val text = binding.editOutput.text.toString().substringBefore("\n")
-                speak.speakOut(text, Locale(it.substringBefore("-")))
-            }
-        }
+        stateView.addSpeakerListener()
     }
 
     inner class Speak {
@@ -306,6 +345,44 @@ class TranslateFragment :
                 childFragmentManager.popBackStack()
             }
             binding.editOutput.setText("")
+        }
+
+        fun setLanguage(
+            code: String?,
+            button: Button,
+            text: String? = null,
+            changeData: (Language?) -> Unit
+        ) {
+            val language = presenter.mapLanguage[code]
+            if (code == null || language == null) {
+                if (text != null) {
+                    button.text = text
+                } else {
+                    button.text = presenter.listLanguage[0].nativeName
+                }
+                changeData(null)
+            } else {
+                button.text = language.nativeName
+                changeData(language)
+            }
+        }
+
+        fun addSpeakerListener() {
+            binding.imageInputSpeaker.setOnClickListener {
+                presenter.sourceLang?.code?.let {
+                    speak.speakOut(
+                        binding.editInput.text.toString(),
+                        Locale(it.substringBefore("-"))
+                    )
+                }
+            }
+
+            binding.imageOutputSpeaker.setOnClickListener {
+                presenter.targetLang?.code?.let {
+                    val text = binding.editOutput.text.toString().substringBefore("\n")
+                    speak.speakOut(text, Locale(it.substringBefore("-")))
+                }
+            }
         }
     }
 

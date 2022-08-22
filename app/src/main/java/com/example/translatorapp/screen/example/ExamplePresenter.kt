@@ -10,7 +10,7 @@ class ExamplePresenter(
     private val exampleRepository: Repository.ExampleRepository
 ) : ExampleContract.Presenter {
 
-    private var mView: ExampleContract.View? = null
+    private var view: ExampleContract.View? = null
 
     override fun getExample(backTranslation: BackTranslation, source: Language, target: Language) {
         exampleRepository.getExample(
@@ -19,14 +19,14 @@ class ExamplePresenter(
             target.code,
             object : OnResultListener<List<Example>> {
                 override fun onSuccess(data: List<Example>) {
-                    mView?.onGetExampleComplete(data)
+                    view?.onGetExampleComplete(data)
                 }
             }
         )
     }
 
     fun setView(view: ExampleContract.View) {
-        mView = view
+        this.view = view
     }
 
     companion object {

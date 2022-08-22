@@ -29,7 +29,7 @@ class ExampleFragment :
     }
 
     override fun changeToolbar() {
-        (activity as MainActivity).let {
+        (activity as? MainActivity)?.let {
             it.enableView(true)
             it.changeToolbar(getString(R.string.title_example_fragment), R.drawable.ic_back)
         }
