@@ -23,7 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="@dimen/dp_5"
         android:textSize="@dimen/sp_16"
-        android:textColor="@color/black"
         android:maxLines="4"/>
 
     <TextView
@@ -33,7 +32,6 @@
         app:layout_constraintStart_toStartOf="@id/text_source"
         app:layout_constraintTop_toBottomOf="@id/text_source"
         android:textSize="@dimen/sp_16"
-        android:textColor="@color/black"
         android:maxLines="4"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

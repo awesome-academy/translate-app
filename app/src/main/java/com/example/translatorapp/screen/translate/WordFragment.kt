@@ -2,6 +2,7 @@ package com.example.translatorapp.screen.translate
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
 import com.example.translatorapp.base.OnItemClickListener
@@ -19,21 +20,18 @@ class WordFragment :
     OnItemClickListener<BackTranslation> {
 
     private var list: List<List<Any>> = emptyList()
+    private val myActivity by lazy { parentFragment?.activity as? MainActivity }
     private var clearState: () -> Unit = {}
     private var sourceLang: Language? = null
     private var targetLang: Language? = null
 
     override fun changeToolbar() {
-        parentFragment?.let {
-            if (it.activity is MainActivity) {
-                (it.activity as MainActivity).apply {
-                    enableView(true)
-                    changeToolbar(
-                        getString(R.string.title_app),
-                        R.drawable.ic_back
-                    )
-                }
-            }
+        myActivity?.apply {
+            enableView(true)
+            changeToolbar(
+                getString(R.string.title_app),
+                R.drawable.ic_back
+            )
         }
     }
 
@@ -61,13 +59,23 @@ class WordFragment :
     }
 
     override fun onClick(data: BackTranslation) {
-        parentFragment?.let {
-            addFragment(
-                fragment = ExampleFragment.newInstance(data, sourceLang, targetLang),
-                addToBackStack = true,
-                container = (it.activity as MainActivity).findLayoutContainer(),
-                manager = it.parentFragmentManager
-            )
+        if (data.hasExample && sourceLang != null) {
+            addExampleFragment(data)
+        } else {
+            Toast.makeText(context, getString(R.string.msg_no_example), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun addExampleFragment(data: BackTranslation) {
+        myActivity?.let { myActivity ->
+            parentFragment?.let {
+                addFragment(
+                    fragment = ExampleFragment.newInstance(data, sourceLang, targetLang),
+                    addToBackStack = true,
+                    container = myActivity.findLayoutContainer(),
+                    manager = it.parentFragmentManager
+                )
+            }
         }
     }
 

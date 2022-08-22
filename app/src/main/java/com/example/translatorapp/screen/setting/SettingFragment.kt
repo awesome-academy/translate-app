@@ -15,17 +15,16 @@ import com.example.translatorapp.screen.translate.TranslateFragment
 
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
+    private val myActivity by lazy { activity as? MainActivity }
     private var speak: TranslateFragment.Speak? = null
     private var pitch = 0F
     private var speed = 0F
     private var isDarkMode = false
 
     override fun changeToolbar() {
-        if (activity is MainActivity) {
-            (activity as MainActivity).let {
-                it.enableView(true)
-                it.changeToolbar(getString(R.string.title_setting_fragment), R.drawable.ic_back)
-            }
+        myActivity?.let {
+            it.enableView(true)
+            it.changeToolbar(getString(R.string.title_setting_fragment), R.drawable.ic_back)
         }
     }
 
@@ -67,10 +66,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     override fun onDestroy() {
-        if (activity is MainActivity) {
-            (activity as MainActivity).apply {
-                unCheckItem()
-            }
+        myActivity?.apply {
+            unCheckItem()
         }
         super.onDestroy()
     }

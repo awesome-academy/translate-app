@@ -15,14 +15,12 @@ class SentenceFragment : BaseFragment<FragmentSentenceBinding>(FragmentSentenceB
 
     override fun changeToolbar() {
         parentFragment?.let {
-            if (it.activity is MainActivity) {
-                (it.activity as MainActivity).apply {
-                    enableView(true)
-                    changeToolbar(
-                        getString(R.string.title_app),
-                        R.drawable.ic_back
-                    )
-                }
+            (it.activity as? MainActivity)?.apply {
+                enableView(true)
+                changeToolbar(
+                    getString(R.string.title_app),
+                    R.drawable.ic_back
+                )
             }
         }
     }

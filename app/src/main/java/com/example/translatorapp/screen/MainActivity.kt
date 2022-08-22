@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.translatorapp.R
 import com.example.translatorapp.constant.Constant
 import com.example.translatorapp.databinding.ActivityMainBinding
+import com.example.translatorapp.screen.history.HistoryFragment
 import com.example.translatorapp.screen.setting.SettingFragment
 import com.example.translatorapp.screen.translate.TranslateFragment
 import com.example.translatorapp.util.addFragment
@@ -73,24 +75,27 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_setting -> {
                     binding.drawerLayout.close()
-                    addSettingFragment()
+                    val translateFragment = supportFragmentManager.findFragmentByTag(Constant.TAG_TRANSLATE)
+                    if (translateFragment is TranslateFragment) {
+                        addFragment(
+                            fragment = SettingFragment.newInstance(translateFragment.speak),
+                            addToBackStack = true,
+                            container = findLayoutContainer(),
+                            manager = supportFragmentManager
+                        )
+                    }
                 }
                 R.id.menu_test -> Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
-                R.id.menu_history -> Toast.makeText(this, "history", Toast.LENGTH_SHORT).show()
+                R.id.menu_history -> {
+                    addFragment(
+                        fragment = HistoryFragment.newInstance(),
+                        addToBackStack = true,
+                        container = findLayoutContainer(),
+                        manager = supportFragmentManager
+                    )
+                }
             }
             true
-        }
-    }
-
-    private fun addSettingFragment() {
-        val translateFragment = supportFragmentManager.findFragmentByTag(Constant.TAG_TRANSLATE)
-        if (translateFragment is TranslateFragment) {
-            addFragment(
-                fragment = SettingFragment.newInstance(translateFragment.speak),
-                addToBackStack = true,
-                container = findLayoutContainer(),
-                manager = supportFragmentManager
-            )
         }
     }
 
@@ -125,6 +130,15 @@ class MainActivity : AppCompatActivity() {
 
     fun unCheckItem() {
         binding.navView.checkedItem?.isChecked = false
+    }
+
+    fun enableItemToolbar(visibility: Boolean) {
+        binding.layoutMain.textTitle.isVisible = visibility
+        if (visibility) {
+            binding.layoutMain.toolbar.setNavigationIcon(R.drawable.ic_back)
+        } else {
+            binding.layoutMain.toolbar.navigationIcon = null
+        }
     }
 
     fun findLayoutContainer() = binding.layoutMain.container.frameLayoutContainer.id

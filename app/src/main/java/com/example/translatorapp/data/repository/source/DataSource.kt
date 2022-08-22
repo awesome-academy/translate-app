@@ -1,7 +1,9 @@
 package com.example.translatorapp.data.repository.source
 
+import android.content.Context
 import com.example.translatorapp.data.model.BackTranslation
 import com.example.translatorapp.data.model.Example
+import com.example.translatorapp.data.model.History
 import com.example.translatorapp.data.model.Language
 import com.example.translatorapp.data.repository.OnResultListener
 
@@ -44,5 +46,11 @@ interface DataSource {
             from: String,
             listener: OnResultListener<List<Example>>
         )
+    }
+
+    interface HistoryDataSource {
+
+        fun getHistory(context: Context, listener: OnResultListener<List<History>>)
+        fun writeHistory(context: Context, text: String, continueFlag: Boolean)
     }
 }
