@@ -33,6 +33,10 @@ class TranslatePresenter(
                     view?.onGetLanguageSuccess(listLanguage)
                 }
             }
+
+            override fun onError(message: Int) {
+                view?.onError(message)
+            }
         })
     }
 
@@ -54,11 +58,19 @@ class TranslatePresenter(
                                         res = "$res\n$data"
                                         view?.onTranslateSentenceComplete(res)
                                     }
+
+                                    override fun onError(message: Int) {
+                                        view?.onError(message)
+                                    }
                                 }
                             )
                         } else {
                             view?.onTranslateSentenceComplete(res)
                         }
+                    }
+
+                    override fun onError(message: Int) {
+                        view?.onError(message)
                     }
                 }
             )
@@ -71,6 +83,10 @@ class TranslatePresenter(
             object : OnResultListener<List<String>> {
                 override fun onSuccess(data: List<String>) {
                     view?.onBreakSentenceComplete(data)
+                }
+
+                override fun onError(message: Int) {
+                    view?.onError(message)
                 }
             }
         )
@@ -95,30 +111,20 @@ class TranslatePresenter(
         historyRepository.writeHistory(context, text, continueFlag)
     }
 
-    private fun transliterateLookup(data: MutableList<List<Any>>, language: Language) {
-        val response = data
-        for (value in data[0]) {
-            if (value is DictionaryLookup) {
-                val mean = value.targetWord.displayText
-                if (language.isTransliterate) {
-                    wordRepository.transliterate(
-                        mean,
-                        language,
-                        object : OnResultListener<String> {
-                            override fun onSuccess(data: String) {
-                                val res = "$mean\n$data"
-                                response.add(listOf(res))
-                                view?.onDictionaryLookupComplete(response)
-                            }
-                        }
-                    )
-                } else {
-                    response.add(listOf(mean))
-                    view?.onDictionaryLookupComplete(response)
-                }
-                break
-            }
+    override fun onStart() {
+        if (mapLanguage.isEmpty() && listLanguage.isEmpty()) {
+            getLanguage()
+        } else {
+            view?.onGetLanguageSuccess(listLanguage)
         }
+    }
+
+    override fun onStop() {
+        // No-op
+    }
+
+    override fun setView(view: TranslateContract.View) {
+        this.view = view
     }
 
     fun getTranslate(text: String) {
@@ -128,18 +134,6 @@ class TranslatePresenter(
         } else {
             getTranslateWord(text)
         }
-    }
-
-    override fun onStart() {
-        getLanguage()
-    }
-
-    override fun onStop() {
-        // No-op
-    }
-
-    override fun setView(view: TranslateContract.View) {
-        this.view = view
     }
 
     private inner class Dictionary {
@@ -155,6 +149,10 @@ class TranslatePresenter(
                         } else {
                             getTranslateSentence(text)
                         }
+                    }
+
+                    override fun onError(message: Int) {
+                        view?.onError(message)
                     }
                 }
             )
@@ -185,8 +183,42 @@ class TranslatePresenter(
                                 transliterateLookup(data, it)
                             }
                         }
+
+                        override fun onError(message: Int) {
+                            view?.onError(message)
+                        }
                     }
                 )
+            }
+        }
+
+        private fun transliterateLookup(data: MutableList<List<Any>>, language: Language) {
+            val response = data
+            for (value in data[0]) {
+                if (value is DictionaryLookup) {
+                    val mean = value.targetWord.displayText
+                    if (language.isTransliterate) {
+                        wordRepository.transliterate(
+                            mean,
+                            language,
+                            object : OnResultListener<String> {
+                                override fun onSuccess(data: String) {
+                                    val res = "$mean\n$data"
+                                    response.add(listOf(res))
+                                    view?.onDictionaryLookupComplete(response)
+                                }
+
+                                override fun onError(message: Int) {
+                                    view?.onError(message)
+                                }
+                            }
+                        )
+                    } else {
+                        response.add(listOf(mean))
+                        view?.onDictionaryLookupComplete(response)
+                    }
+                    break
+                }
             }
         }
     }

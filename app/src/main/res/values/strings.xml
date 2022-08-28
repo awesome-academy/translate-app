@@ -41,6 +41,14 @@
     <string name="time">%ds</string>
     <string name="your_score">Điểm số của bạn: %d/%d</string>
     <string name="your_time">Thời gian: %d phút %d giây</string>
+    <string name="error_language">Không lấy được ngôn ngữ</string>
+    <string name="error_translate">Dịch không thành công</string>
+    <string name="error_transliterate">Phiên âm thất bại</string>
+    <string name="error_break_sentence">Lỗi tách câu</string>
+    <string name="error_detect_language">Không nhận diện được ngôn ngữ</string>
+    <string name="error_get_example">Không lấy được ví dụ</string>
+    <string name="error_get_history">Không lấy được lịch sử</string>
+    <string name="error_get_exam">Không lấy được danh sách câu hỏi</string>
     <string-array name="spinner_item">
         <item>Thấp</item>
         <item>Vừa</item>

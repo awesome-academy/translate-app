@@ -3,6 +3,7 @@ package com.example.translatorapp.screen.translate
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
 import com.example.translatorapp.base.OnItemClickListener
@@ -13,6 +14,7 @@ import com.example.translatorapp.screen.MainActivity
 import com.example.translatorapp.screen.example.ExampleFragment
 import com.example.translatorapp.screen.translate.adapter.MeanAdapter
 import com.example.translatorapp.screen.translate.adapter.WordAdapter
+import com.example.translatorapp.util.Dialog
 import com.example.translatorapp.util.NetworkUtils
 import com.example.translatorapp.util.addFragmentToParent
 
@@ -79,7 +81,10 @@ class WordFragment :
                     container = myActivity?.findLayoutContainer()
                 )
             } else {
-                NetworkUtils.setDialogAction(it) { addExampleFragment(data) }
+                context?.let { context ->
+                    val dialog = Dialog(AlertDialog.Builder(context, R.style.AlertDialogTheme))
+                    NetworkUtils.setDialogAction(dialog) { addExampleFragment(data) }
+                }
             }
         }
     }

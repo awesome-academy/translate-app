@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
@@ -25,6 +26,7 @@ import com.example.translatorapp.screen.MainActivity
 import com.example.translatorapp.screen.language.LanguageSourceFragment
 import com.example.translatorapp.screen.language.LanguageTargetFragment
 import com.example.translatorapp.screen.setting.SettingFragment
+import com.example.translatorapp.util.Dialog
 import com.example.translatorapp.util.NetworkUtils
 import com.example.translatorapp.util.addFragmentToChild
 import com.example.translatorapp.util.addFragmentToParent
@@ -38,6 +40,16 @@ class TranslateFragment :
     private val myActivity by lazy { activity as? MainActivity }
     private val stateView by lazy { StateView() }
     private val clipBroad by lazy { ClipBroad() }
+    private val dialogLoading by lazy {
+        context?.let {
+            Dialog(AlertDialog.Builder(it))
+        }
+    }
+    private val dialogNotify by lazy {
+        context?.let {
+            Dialog(AlertDialog.Builder(it, R.style.AlertDialogTheme))
+        }
+    }
     private val presenter by lazy {
         TranslatePresenter.getInstance(
             LanguageRepository.getInstance(
@@ -69,7 +81,7 @@ class TranslateFragment :
         sharedPreferences?.getFloat(Constant.KEY_SPEED, SettingFragment.NORMAL)?.let {
             speak.setSpeed(it)
         }
-        addListener()
+        stateView.addListener()
         parentFragmentManager.setFragmentResultListener(
             Constant.KEY_HISTORY,
             this
@@ -96,14 +108,7 @@ class TranslateFragment :
         presenter.apply {
             setView(this@TranslateFragment)
             activity?.applicationContext?.let {
-                fun getLang() {
-                    if (NetworkUtils.isNetworkAvailable(it)) {
-                        presenter.onStart()
-                    } else {
-                        NetworkUtils.setDialogAction(it) { getLang() }
-                    }
-                }
-                getLang()
+                stateView.getLang(it)
             }
         }
     }
@@ -150,6 +155,9 @@ class TranslateFragment :
                     presenter.targetLang = language
                 }
             }
+            if (dialogLoading?.isShowing() == true) {
+                dialogLoading?.dismiss()
+            }
         }
     }
 
@@ -164,6 +172,9 @@ class TranslateFragment :
                         "${binding.editInput.text.trim()}\t${data.split("\n")[0]}\n",
                     true
                 )
+            }
+            if (dialogLoading?.isShowing() == true) {
+                dialogLoading?.dismiss()
             }
         }
     }
@@ -219,68 +230,19 @@ class TranslateFragment :
                 container = binding.frameSupLayoutContainer.id,
                 customAnimation = false
             )
+            if (dialogLoading?.isShowing() == true) {
+                dialogLoading?.dismiss()
+            }
         }
     }
 
-    private fun addListener() {
-        binding.buttonFrom.setOnClickListener {
-            val sourceFragment =
-                LanguageSourceFragment.newInstance(
-                    presenter.listLanguage,
-                    { stateView.clearState() }
-                ) { data, text ->
-                    data?.let {
-                        binding.buttonFrom.text = it.nativeName
-                    }
-                    presenter.sourceLang = data
-                    text?.let { binding.buttonFrom.text = it }
-                }
-            myActivity?.let {
-                addFragmentToParent(
-                    fragment = sourceFragment,
-                    addToBackStack = true,
-                    container = it.findLayoutContainer()
-                )
+    override fun onError(message: Int) {
+        myActivity?.runOnUiThread {
+            if (dialogLoading?.isShowing() == true) {
+                dialogLoading?.dismiss()
             }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
-
-        binding.buttonTo.setOnClickListener {
-            val targetFragment = LanguageTargetFragment.newInstance(
-                presenter.listLanguage,
-                { stateView.clearState() }
-            ) { data ->
-                binding.buttonTo.text = data.nativeName
-                presenter.targetLang = data
-            }
-            myActivity?.let {
-                addFragmentToParent(
-                    fragment = targetFragment,
-                    addToBackStack = true,
-                    container = it.findLayoutContainer()
-                )
-            }
-        }
-
-        binding.buttonTranslate.setOnClickListener {
-            if (binding.editInput.text.toString().trim().isNotEmpty()) {
-                activity?.applicationContext?.let {
-                    if (NetworkUtils.isNetworkAvailable(it)) {
-                        presenter.getTranslate(binding.editInput.text.toString().trim())
-                        stateView.enableImage(View.VISIBLE)
-                    } else {
-                        NetworkUtils.setDialogAction(it) {
-                            binding.buttonTranslate.callOnClick()
-                        }
-                    }
-                }
-            }
-        }
-
-        binding.imageCopyOutput.setOnClickListener { clipBroad.copyToClipboard(binding.editOutput.text.toString()) }
-
-        binding.imageCopyInput.setOnClickListener { clipBroad.copyToClipboard(binding.editInput.text.toString()) }
-
-        stateView.addSpeakerListener()
     }
 
     inner class Speak {
@@ -361,7 +323,6 @@ class TranslateFragment :
 
         fun clearState() {
             enableImage(View.INVISIBLE)
-            binding.editInput.isEnabled = true
             if (childFragmentManager.backStackEntryCount > 0) {
                 childFragmentManager.popBackStack()
             }
@@ -388,7 +349,71 @@ class TranslateFragment :
             }
         }
 
-        fun addSpeakerListener() {
+        fun addListener() {
+            binding.buttonFrom.setOnClickListener {
+                val sourceFragment =
+                    LanguageSourceFragment.newInstance(
+                        presenter.listLanguage,
+                        { stateView.clearState() }
+                    ) { data, text ->
+                        data?.let {
+                            binding.buttonFrom.text = it.nativeName
+                        }
+                        presenter.sourceLang = data
+                        text?.let { binding.buttonFrom.text = it }
+                    }
+                myActivity?.let {
+                    addFragmentToParent(
+                        fragment = sourceFragment,
+                        addToBackStack = true,
+                        container = it.findLayoutContainer()
+                    )
+                }
+            }
+
+            binding.buttonTo.setOnClickListener {
+                val targetFragment = LanguageTargetFragment.newInstance(
+                    presenter.listLanguage,
+                    { stateView.clearState() }
+                ) { data ->
+                    binding.buttonTo.text = data.nativeName
+                    presenter.targetLang = data
+                }
+                myActivity?.let {
+                    addFragmentToParent(
+                        fragment = targetFragment,
+                        addToBackStack = true,
+                        container = it.findLayoutContainer()
+                    )
+                }
+            }
+
+            binding.buttonTranslate.setOnClickListener {
+                if (binding.editInput.text.toString().trim().isNotEmpty()) {
+                    activity?.applicationContext?.let {
+                        if (NetworkUtils.isNetworkAvailable(it)) {
+                            dialogLoading?.showLoadingDialog()
+                            presenter.getTranslate(binding.editInput.text.toString().trim())
+                            stateView.enableImage(View.VISIBLE)
+                        } else {
+                            dialogNotify?.let { dialog ->
+                                NetworkUtils.setDialogAction(dialog) {
+                                    binding.buttonTranslate.callOnClick()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            binding.imageCopyOutput.setOnClickListener { clipBroad.copyToClipboard(binding.editOutput.text.toString()) }
+
+            binding.imageCopyInput.setOnClickListener { clipBroad.copyToClipboard(binding.editInput.text.toString()) }
+
+            stateView.addSpeakerListener()
+        }
+
+        private fun addSpeakerListener() {
             binding.imageInputSpeaker.setOnClickListener {
                 presenter.sourceLang?.code?.let {
                     speak.speakOut(
@@ -402,6 +427,17 @@ class TranslateFragment :
                 presenter.targetLang?.code?.let {
                     val text = binding.editOutput.text.toString().substringBefore("\n")
                     speak.speakOut(text, Locale(it.substringBefore("-")))
+                }
+            }
+        }
+
+        fun getLang(applicationContext: Context) {
+            if (NetworkUtils.isNetworkAvailable(applicationContext)) {
+                dialogLoading?.showLoadingDialog()
+                presenter.onStart()
+            } else {
+                dialogLoading?.let {
+                    NetworkUtils.setDialogAction(it) { getLang(applicationContext) }
                 }
             }
         }

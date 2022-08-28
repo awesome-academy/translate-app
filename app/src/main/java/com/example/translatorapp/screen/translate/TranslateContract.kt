@@ -1,6 +1,7 @@
 package com.example.translatorapp.screen.translate
 
 import android.content.Context
+import androidx.annotation.StringRes
 import com.example.translatorapp.data.model.Language
 
 class TranslateContract {
@@ -10,6 +11,7 @@ class TranslateContract {
         fun onTranslateSentenceComplete(data: String)
         fun onBreakSentenceComplete(data: List<String>)
         fun onDictionaryLookupComplete(data: List<List<Any>>)
+        fun onError(@StringRes message: Int)
     }
 
     interface Presenter {

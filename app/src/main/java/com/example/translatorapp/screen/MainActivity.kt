@@ -2,6 +2,7 @@ package com.example.translatorapp.screen
 
 import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
@@ -12,6 +13,7 @@ import com.example.translatorapp.screen.history.HistoryFragment
 import com.example.translatorapp.screen.setting.SettingFragment
 import com.example.translatorapp.screen.test.TestFragment
 import com.example.translatorapp.screen.translate.TranslateFragment
+import com.example.translatorapp.util.Dialog
 import com.example.translatorapp.util.NetworkUtils
 import com.example.translatorapp.util.addFragment
 
@@ -115,7 +117,8 @@ class MainActivity : AppCompatActivity() {
                     tag = Constant.TAG_TRANSLATE
                 )
             } else {
-                NetworkUtils.setDialogAction(applicationContext) { restoreState(instanceState) }
+                val dialog = Dialog(AlertDialog.Builder(this, R.style.AlertDialogTheme))
+                NetworkUtils.setDialogAction(dialog) { restoreState(instanceState) }
             }
         }
     }

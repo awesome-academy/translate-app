@@ -19,6 +19,10 @@ class TestPresenter(
                 override fun onSuccess(data: List<Exam>) {
                     view?.onGetQuestionComplete(data)
                 }
+
+                override fun onError(message: Int) {
+                    view?.onError(message)
+                }
             }
         )
     }

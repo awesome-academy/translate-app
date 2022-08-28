@@ -2,6 +2,8 @@ package com.example.translatorapp.screen.example
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
 import com.example.translatorapp.data.model.BackTranslation
@@ -12,6 +14,7 @@ import com.example.translatorapp.data.repository.source.example.ExampleRepositor
 import com.example.translatorapp.databinding.FragmentExampleBinding
 import com.example.translatorapp.screen.MainActivity
 import com.example.translatorapp.screen.example.adapter.ExampleAdapter
+import com.example.translatorapp.util.Dialog
 
 class ExampleFragment :
     BaseFragment<FragmentExampleBinding>(FragmentExampleBinding::inflate),
@@ -20,6 +23,7 @@ class ExampleFragment :
     private var source: Language? = null
     private var target: Language? = null
     private var backTranslation: BackTranslation? = null
+    private val dialog by lazy { context?.let { Dialog(AlertDialog.Builder(it)) } }
     private val presenter by lazy {
         ExamplePresenter.getInstance(
             ExampleRepository.getInstance(
@@ -43,6 +47,7 @@ class ExampleFragment :
                 getString(R.string.text_source_suffix, it.sampleWord.displayText)
             target?.let { target ->
                 source?.let { source ->
+                    dialog?.showLoadingDialog()
                     presenter.getExample(it, source, target)
                 }
             }
@@ -54,6 +59,18 @@ class ExampleFragment :
             val adapter = ExampleAdapter()
             adapter.updateData(listExample)
             binding.recyclerListExample.adapter = adapter
+            if (dialog?.isShowing() == true) {
+                dialog?.dismiss()
+            }
+        }
+    }
+
+    override fun onError(message: Int) {
+        activity?.runOnUiThread {
+            if (dialog?.isShowing() == true) {
+                dialog?.dismiss()
+            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 

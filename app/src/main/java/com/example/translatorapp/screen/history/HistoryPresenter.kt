@@ -22,6 +22,10 @@ class HistoryPresenter(
                     listHistory.addAll(data)
                     view?.onGetHistoryComplete(data)
                 }
+
+                override fun onError(message: Int) {
+                    view?.onError(message)
+                }
             }
         )
     }
