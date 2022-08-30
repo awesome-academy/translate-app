@@ -2,6 +2,7 @@ package com.example.translatorapp.screen.test
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
@@ -60,10 +61,18 @@ class TestFragment :
     }
 
     override fun onGetQuestionComplete(data: List<Exam>) {
-        val adapter = ExamAdapter()
-        adapter.updateData(data)
-        adapter.regisListener(this)
-        binding.recyclerListTest.adapter = adapter
+        myActivity?.runOnUiThread {
+            val adapter = ExamAdapter()
+            adapter.updateData(data)
+            adapter.regisListener(this)
+            binding.recyclerListTest.adapter = adapter
+        }
+    }
+
+    override fun onError(message: Int) {
+        activity?.runOnUiThread {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroy() {

@@ -18,6 +18,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
     private var time = Constant.TIME_UNIT
     private var timer: Timer? = null
     private var nextTimer: Timer? = null
+    private var selected: Boolean = false
 
     override fun changeToolbar() {
         // No-op
@@ -75,7 +76,11 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
         val text = button.text.trim()
         question?.apply {
             for (answer in listAnswer) {
+                if (selected) {
+                    break
+                }
                 if (answer.text == text) {
+                    selected = true
                     setColor(button, answer.isTrueAnswer)
                     timer?.cancel()
                     nextTimer = Timer()

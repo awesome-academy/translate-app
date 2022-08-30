@@ -22,6 +22,10 @@ class ExamplePresenter(
                 override fun onSuccess(data: List<Example>) {
                     view?.onGetExampleComplete(data)
                 }
+
+                override fun onError(message: Int) {
+                    view?.onError(message)
+                }
             }
         )
     }

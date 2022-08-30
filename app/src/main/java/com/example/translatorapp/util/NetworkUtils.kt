@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.appcompat.app.AlertDialog
 import com.example.translatorapp.R
 
 object NetworkUtils {
@@ -27,17 +26,16 @@ object NetworkUtils {
         }
     }
 
-    fun setDialogAction(context: Context, change: () -> Unit) {
-        val dialog = Dialog(AlertDialog.Builder(context, R.style.AlertDialogTheme))
+    fun setDialogAction(dialog: Dialog, change: () -> Unit) {
         dialog.apply {
             buildDialog(
-                title = context.getString(R.string.title_no_internet),
+                title = R.string.title_app,
                 icon = R.drawable.ic_no_internet,
-                msg = context.getString(R.string.msg_no_internet),
+                msg = R.string.msg_no_internet,
                 cancellable = false
             )
-            setPositiveButton(context.getString(R.string.retry)) {
-                    _, _ ->
+            setPositiveButton(R.string.retry) {
+                _, _ ->
                 change()
             }
         }

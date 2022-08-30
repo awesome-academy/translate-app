@@ -30,7 +30,6 @@ class SentenceFragment : BaseFragment<FragmentSentenceBinding>(FragmentSentenceB
         val adapter = WordAdapter()
         adapter.updateData(listSentence)
         binding.recyclerSentenceBreak.adapter = adapter
-        binding.recyclerSentenceBreak.isNestedScrollingEnabled = false
     }
 
     override fun onDestroyView() {

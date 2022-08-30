@@ -14,5 +14,5 @@
         android:elevation="@dimen/dp_2"
         android:padding="@dimen/dp_2"
         android:tintMode="multiply"
-        app:srcCompat="@drawable/app_thum"/>
+        app:srcCompat="@drawable/app_thumbnail"/>
 </LinearLayout>

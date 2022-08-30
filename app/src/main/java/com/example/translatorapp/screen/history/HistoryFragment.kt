@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.translatorapp.R
 import com.example.translatorapp.base.BaseFragment
@@ -127,9 +128,17 @@ class HistoryFragment :
     }
 
     override fun onGetHistoryComplete(data: List<History>) {
-        adapter.updateData(presenter.listHistory)
-        adapter.registerClickListener(this, this)
-        binding.recyclerListHistory.adapter = adapter
+        myActivity?.runOnUiThread {
+            adapter.updateData(presenter.listHistory)
+            adapter.registerClickListener(this, this)
+            binding.recyclerListHistory.adapter = adapter
+        }
+    }
+
+    override fun onError(message: Int) {
+        activity?.runOnUiThread {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
